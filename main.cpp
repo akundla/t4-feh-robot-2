@@ -480,7 +480,6 @@ void FollowRedLine(){
     }
 }
 
-// TODO: Confirm that the starting light turns red to signal start
 void waitForStartLight () {
 
     // Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red
@@ -578,6 +577,7 @@ void performanceTestOne () {
 
     driveTime(5.6, powerPercent);
     turnAround();
+    // TODO: Consider shortening this time
     driveTime(1.65, -powerPercent);
 
     Sleep(0.5);
