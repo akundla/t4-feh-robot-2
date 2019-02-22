@@ -26,10 +26,12 @@ AnalogInputPin middleOptosensor (FEHIO::P2_1);
 AnalogInputPin rightOptosensor (FEHIO::P2_0);
 
 // ENCODERS
-DigitalEncoder left_encoder(FEHIO::P1_0);
-DigitalEncoder right_encoder(FEHIO::P1_1);
+DigitalEncoder left_encoder(FEHIO::P1_7);
+DigitalEncoder right_encoder(FEHIO::P1_0);
 
-#define TICKS_PER_REV 48
+#define LEFT_TICKS_PER_REV 260
+#define RIGHT_TICKS_PER_REV 350
+// It goes about 277 - 289
 
 //MOTORS
 //Assign the right and left motors to motor ports with a max voltage of 9.0V
@@ -54,8 +56,8 @@ FEHServo servo (FEHServo::Servo0);
 
 // CALIBRATION VALUES
 // Calibration values for Exploration 1 servo
-#define EXP_1_SERVO_MIN 500
-#define EXP_1_SERVO_MAX 2340
+#define SERVO_MIN 769
+#define SERVO_MAX 2490
 
 // Constants from exploration 1
 // Left optosensor
@@ -77,7 +79,7 @@ FEHServo servo (FEHServo::Servo0);
 #define RIGHT_BLACK 2.434
 
 // This margin is wider than necessary for easy detection on clear-contrast backgrounds
-#define MoE 0.100
+#define MoE 0.500
 
 
 // CALIBRATION FUNCTIONS
@@ -85,8 +87,8 @@ FEHServo servo (FEHServo::Servo0);
 // Calibrates the servo tested in Exploration 1
 void calibrateServo() {
     // Calibrate Servo
-    servo.SetMin(EXP_1_SERVO_MIN);
-    servo.SetMax(EXP_1_SERVO_MAX);
+    servo.SetMin(SERVO_MIN);
+    servo.SetMax(SERVO_MAX);
 }
 
 
@@ -209,13 +211,21 @@ void driveDistanceForward(int percent, int counts) //using encoders
 
     // Runs motors while the average of the left and right encoder is less than counts,
     //keep running motors
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2.0 < counts) {
+    while(right_encoder.Counts() < counts) {
         LCD.WriteLine("L: ");
         LCD.Write(left_encoder.Counts());
         LCD.WriteLine("R: ");
         LCD.WriteLine(right_encoder.Counts());
         LCD.WriteLine("");
     }
+
+    LCD.Clear();
+
+    LCD.WriteLine("L: ");
+    LCD.Write(left_encoder.Counts());
+    LCD.WriteLine("R: ");
+    LCD.WriteLine(right_encoder.Counts());
+    LCD.WriteLine("");
 
     //Turn off motors
     rightMotor.Stop();
@@ -471,21 +481,12 @@ void FollowRedLine(){
 }
 
 // TODO: Confirm that the starting light turns red to signal start
-// Drives the robot from the starting position to the lever
-void DriveForwardOnStartLight (int left_motor_percent, int right_motor_percent) {
+void waitForStartLight () {
 
     // Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red
-    while (cdsCell.Value() > RED_LIGHT_NO_FILTER_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_NO_FILTER_V_AVG - MoE) {}
-
-    //Turn both motors on at given percent motor power.
-    leftMotor.SetPercent(left_motor_percent);
-    rightMotor.SetPercent(right_motor_percent);
-
-    // TODO: Input shaft encoding here or use bump switches
-
-    // Stops motors
-    leftMotor.Stop();
-    rightMotor.Stop();
+    while (cdsCell.Value() > RED_LIGHT_NO_FILTER_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_NO_FILTER_V_AVG - MoE) {
+        LCD.WriteLine(cdsCell.Value());
+    }
 }
 
 // Drives the robot back from the lever to the start
@@ -502,18 +503,92 @@ void DriveBackLeverToStart (int left_motor_percent, int right_motor_percent) {
     rightMotor.Stop();
 }
 
-// Moves the arm with the servo to smack the lever down
-// TODO: Check angle
-void flipLever () {
-    servo.SetDegree(0);
+void driveTime(double seconds, int power) {
+    LCD.WriteLine("Driving forward");
+
+    double offset = -3.75;
+
+    leftMotor.SetPercent(power + offset);
+    rightMotor.SetPercent(-power);
+
+    Sleep(seconds);
+
+    leftMotor.Stop();
+    rightMotor.Stop();
+
+}
+
+void driveBackwardsTime(double seconds, int power) {
+    LCD.WriteLine("Driving forward");
+
+    double offset = +3.75;
+
+    leftMotor.SetPercent(power + offset);
+    rightMotor.SetPercent(-power);
+
+    Sleep(seconds);
+
+    leftMotor.Stop();
+    rightMotor.Stop();
+
+}
+
+void turnInCircle(double seconds, int power) {
+    LCD.WriteLine("Turning around");
+
+    double offset = -1.0;
+
+    leftMotor.SetPercent(-power + offset);
+    rightMotor.SetPercent(-power);
+
+    Sleep(seconds);
+
+    leftMotor.Stop();
+    rightMotor.Stop();
+}
+
+void turnAround() {
+    // 180 was about 3.700 seconds at 20 percent
+    turnInCircle(3.500, 21);
+}
+
+void turnOnStart() {
+    // 180 was about 3.700 seconds at 20 percent
+    turnInCircle(3.500 / 4.0, -22);
 }
 
 // Navigates from the starting box to the lever, flips the lever, then drives back
 void performanceTestOne () {
-    // TODO: Write this
-    //DriveForwardOnStartLight();
-    //flipLever();
-    //DriveBackLeverToStart();
+
+    float x, y;
+
+    double powerPercent = 42;
+
+    servo.SetDegree(120);
+
+    LCD.WriteLine("Performance test 1");
+    LCD.WriteLine("Set the arm to the correct position you lazy piece of shit");
+    LCD.WriteLine("Then touch the screen to continue");
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
+
+    waitForStartLight();
+
+    turnOnStart();
+
+    driveTime(5.6, powerPercent);
+    turnAround();
+    driveTime(1.65, -powerPercent);
+
+    Sleep(0.5);
+
+    servo.SetDegree(0);
+    Sleep(0.5);
+
+    driveBackwardsTime(6.0, powerPercent);
+
+    rightMotor.Stop();
+    leftMotor.Stop();
 }
 
 void printShaftEncoderValues () {
@@ -524,23 +599,24 @@ void printShaftEncoderValues () {
     // Runs motors while the average of the left and right encoder is less than counts,
     //keep running motors
     while (true) {
+        LCD.WriteLine("L: ");
         LCD.WriteLine(left_encoder.Counts());
+
+        LCD.WriteLine("R: ");
         LCD.WriteLine(right_encoder.Counts());
-        LCD.Clear();
-        Sleep(0.1);
+        LCD.WriteLine("");
     }
 }
-
 
 // MAIN FUNCTION
 int main(void)
 {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
-
-    double powerPercent = 40;
+    calibrateServo();
 
     // Call desired function
-    driveDistanceForward(powerPercent, 48 * 10);
+    performanceTestOne();
+
 
     // Just a conventional best practice
     return 0;
