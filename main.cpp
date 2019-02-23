@@ -505,7 +505,9 @@ void DriveBackLeverToStart (int left_motor_percent, int right_motor_percent) {
 void driveTime(double seconds, int power) {
     LCD.WriteLine("Driving forward");
 
-    double offset = -3.75;
+
+    // 4.125
+    double offset = 1.0;
 
     leftMotor.SetPercent(power + offset);
     rightMotor.SetPercent(-power);
@@ -548,12 +550,12 @@ void turnInCircle(double seconds, int power) {
 
 void turnAround() {
     // 180 was about 3.700 seconds at 20 percent
-    turnInCircle(3.500, 21);
+    turnInCircle(3.300, 21);
 }
 
 void turnOnStart() {
     // 180 was about 3.700 seconds at 20 percent
-    turnInCircle(3.500 / 4.0, -22);
+    turnInCircle(2.900 / 4.0, -22);
 }
 
 // Navigates from the starting box to the lever, flips the lever, then drives back
@@ -561,7 +563,7 @@ void performanceTestOne () {
 
     float x, y;
 
-    double powerPercent = 42;
+    double powerPercent = 39;
 
     servo.SetDegree(120);
 
@@ -578,7 +580,7 @@ void performanceTestOne () {
     driveTime(5.6, powerPercent);
     turnAround();
     // TODO: Consider shortening this time
-    driveTime(1.65, -powerPercent);
+    driveTime(1.34, -powerPercent);
 
     Sleep(0.5);
 
