@@ -10,6 +10,21 @@
 
 // DECLARE GLOBAL CONSTANTS
 
+// Power offset added to the left motor to make the robot drive straight
+#define LEFT_MOTOR_OFFSET 1.0
+
+#define SKID_FIRST true
+#define WHEELS_FIRST false
+
+#define CLOCKWISE true
+#define COUNTER_CLOCKWISE false
+
+// Standard percentage of motor power for driving forwards or backwards
+#define DRIVE_POWER 40.0
+
+// Standard percentage of motor power for turning the robot in place
+#define TURN_POWER 20.0
+
 // SENSORS
 //Declare a CdS Cell sensor as an analog input and assign it to an IO port
 AnalogInputPin cdsCell (FEHIO::P0_0);
@@ -99,7 +114,7 @@ void calibrateServo() {
 void DriveForwardUntilHitWall(int left_motor_percent, int right_motor_percent)
 {
     //Turn both motors on at given percent motor power.
-    leftMotor.SetPercent(left_motor_percent);
+    leftMotor.SetPercent(left_motor_percent + LEFT_MOTOR_OFFSET);
     rightMotor.SetPercent(right_motor_percent);
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
@@ -317,18 +332,16 @@ void explorationTwoShaftEncoders () {
 
 // COMBINATION FUNCTIONS
 
-// TODO: Recalibrate offset for new motor setup
 // Uses functions written above to navigate the Exploration 1 course
 void navigateExploration1Course() {
 
-    double OFFSET_TO_DRIVE_STRAIGHT = 1.5;
     int QUARTER_POWER_PERCENT = 25;
 
-    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT - OFFSET_TO_DRIVE_STRAIGHT);
+    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT);
     BackLeftTurnUntilHitWall();
-    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT - OFFSET_TO_DRIVE_STRAIGHT);
+    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT);
     BackRightTurnUntilCornerHitWall();
-    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT - OFFSET_TO_DRIVE_STRAIGHT);
+    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT);
 }
 
 void lineFollowerPrintValues() {
@@ -488,106 +501,121 @@ void waitForStartLight () {
     }
 }
 
-// Drives the robot back from the lever to the start
-void DriveBackLeverToStart (int left_motor_percent, int right_motor_percent) {
+void driveForSeconds(bool skidFirst, double seconds, int motorPowerPercent) {
+    LCD.WriteLine("Driving for ");
+    LCD.Write(seconds);
+    LCD.Write(" seconds");
 
-    //Turn both motors on at given percent motor power.
-    leftMotor.SetPercent(left_motor_percent);
-    rightMotor.SetPercent(right_motor_percent);
+    // Left and Right motor must be driven at different percentages
+    double leftMotorPowerPercent = 0.0;
+    double rightMotorPowerPercent = 0.0;
 
-    // TODO: Input shaft encoding here or use bump switches
+    // Drives skids first
+    if (skidFirst) {
+        leftMotorPowerPercent = motorPowerPercent + LEFT_MOTOR_OFFSET;
+        rightMotorPowerPercent = -motorPowerPercent;
+    }
+    // Drives wheels first
+    else {
+        leftMotorPowerPercent = -(motorPowerPercent + LEFT_MOTOR_OFFSET);
+        rightMotorPowerPercent = motorPowerPercent;
+    }
 
-    // Stops motors
-    leftMotor.Stop();
-    rightMotor.Stop();
-}
+    // Sets the motors in motion
+    leftMotor.SetPercent(leftMotorPowerPercent);
+    rightMotor.SetPercent(rightMotorPowerPercent);
 
-void driveTime(double seconds, int power) {
-    LCD.WriteLine("Driving forward");
-
-
-    // 4.125
-    double offset = 1.0;
-
-    leftMotor.SetPercent(power + offset);
-    rightMotor.SetPercent(-power);
-
+    // Runs the motors for the specified time
     Sleep(seconds);
 
     leftMotor.Stop();
     rightMotor.Stop();
-
 }
 
-void driveBackwardsTime(double seconds, int power) {
-    LCD.WriteLine("Driving forward");
-
-    double offset = +3.75;
-
-    leftMotor.SetPercent(power + offset);
-    rightMotor.SetPercent(-power);
-
-    Sleep(seconds);
-
-    leftMotor.Stop();
-    rightMotor.Stop();
-
-}
-
-void turnInCircle(double seconds, int power) {
+void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
     LCD.WriteLine("Turning around");
 
-    double offset = -1.0;
+    // Left and Right motor must be driven at different percentages
+    double leftMotorPowerPercent = 0.0;
+    double rightMotorPowerPercent = 0.0;
 
-    leftMotor.SetPercent(-power + offset);
-    rightMotor.SetPercent(-power);
+    // Turns clockwise
+    if (turnClockwise) {
+        leftMotorPowerPercent = -(motorPowerPercent + LEFT_MOTOR_OFFSET);
+        rightMotorPowerPercent = -motorPowerPercent;
+    }
+    // Turns counterclockwise
+    else {
+        leftMotorPowerPercent = motorPowerPercent + LEFT_MOTOR_OFFSET;
+        rightMotorPowerPercent = motorPowerPercent;
+    }
 
+    // Sets the motors in motion
+    leftMotor.SetPercent(leftMotorPowerPercent);
+    rightMotor.SetPercent(rightMotorPowerPercent);
+
+    // Turns for the specified duration
     Sleep(seconds);
 
+    // Stops both motors
     leftMotor.Stop();
     rightMotor.Stop();
 }
 
+// Turns the robot about 180 degrees clockwise at the top of the ramp
 void turnAround() {
-    // 180 was about 3.700 seconds at 20 percent
-    turnInCircle(3.300, 21);
+    const double secondsToTurn = 3.30;
+    turnInPlace(CLOCKWISE, secondsToTurn, TURN_POWER);
 }
 
+// Turns the robot about 45 degrees counterclockwise in the starting box
 void turnOnStart() {
-    // 180 was about 3.700 seconds at 20 percent
-    turnInCircle(2.900 / 4.0, -22);
+    const double secondsToTurn = 0.725;
+    turnInPlace(COUNTER_CLOCKWISE, secondsToTurn, TURN_POWER);
 }
 
 // Navigates from the starting box to the lever, flips the lever, then drives back
 void performanceTestOne () {
 
-    float x, y;
+    // Calibration values:
+    const double secondsToDriveUpRamp = 5.6;
+    const double secondsToDriveToLever = 1.34;
+    const double secondsToDriveBack = 6.0;
 
-    double powerPercent = 39;
-
+    // Set the servo arm in starting position
     servo.SetDegree(120);
 
+    float x, y;
     LCD.WriteLine("Performance test 1");
-    LCD.WriteLine("Set the arm to the correct position you lazy piece of shit");
+    LCD.WriteLine("Set the arm to the correct position you robot champion!");
     LCD.WriteLine("Then touch the screen to continue");
     while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
     while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
 
+    // Waits for the light to turn red
     waitForStartLight();
 
+    // Turns the robot roughly 45 degrees on start to align with the ramp
     turnOnStart();
 
-    driveTime(5.6, powerPercent);
+    // Drives from starting box up the short ramp
+    driveForSeconds(SKID_FIRST, secondsToDriveUpRamp, DRIVE_POWER);
+
+    // Turns the robot roughly 180 degrees at the top of the ramp
     turnAround();
-    // TODO: Consider shortening this time
-    driveTime(1.34, -powerPercent);
 
+    // Drives the robot to the lever
+    driveForSeconds(WHEELS_FIRST, secondsToDriveToLever, DRIVE_POWER);
+
+    // Pauses to allow the robot to settle into place
     Sleep(0.5);
-
+    // Turns the servo arm to hit the lever
     servo.SetDegree(0);
+    // Pauses to allow the arm to actually hit said lever
     Sleep(0.5);
 
-    driveBackwardsTime(6.0, powerPercent);
+    // Drives back down the ramp
+    driveForSeconds(SKID_FIRST, secondsToDriveBack, DRIVE_POWER);
 
     rightMotor.Stop();
     leftMotor.Stop();
@@ -623,5 +651,3 @@ int main(void)
     // Just a conventional best practice
     return 0;
 }
-
-//test edit by Connor
