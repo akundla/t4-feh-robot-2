@@ -571,7 +571,7 @@ void turnAround() {
 // Turns the robot about 45 degrees counterclockwise in the starting box
 void turnOnStart() {
     const double secondsToTurn = 0.725;
-    turnInPlace(COUNTER_CLOCKWISE, secondsToTurn, TURN_POWER);
+    turnInPlace(CLOCKWISE, secondsToTurn, TURN_POWER);
 }
 
 // Navigates from the starting box to the lever, flips the lever, then drives back
@@ -638,6 +638,36 @@ void printShaftEncoderValues () {
     }
 }
 
+void performanceTestTwo () {
+    float x, y;
+    //Calibration Values
+    const double secondsToFirstDDRButton = 5.0;
+    const double secondsAfterStart = 0.5;
+
+    //Set initial servo degree
+    servo.SetDegree(180);
+
+    //Print test information to screen
+    LCD.WriteLine("Performance test 2");
+    LCD.WriteLine("Set the arm to the correct position you robot champion!");
+    LCD.WriteLine("Then touch the screen to continue");
+
+    //Wait for final action
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
+
+    //Robot will begin on start light
+    waitForStartLight();
+
+    driveForSeconds(SKID_FIRST,secondsAfterStart, DRIVE_POWER);
+
+    //Turn Clockwise about 45 degrees to face DDR buttons
+    turnOnStart();
+
+    //Drive to the first DDR button
+    driveForSeconds(SKID_FIRST, secondsToFirstDDRButton, DRIVE_POWER);
+}
+
 // MAIN FUNCTION
 int main(void)
 {
@@ -645,7 +675,9 @@ int main(void)
     calibrateServo();
 
     // Call desired function
-    performanceTestOne();
+    //performanceTestOne();
+    performanceTestTwo();
+
 
 
     // Just a conventional best practice
