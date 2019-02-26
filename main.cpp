@@ -501,6 +501,15 @@ void waitForStartLight () {
     }
 }
 
+/**
+ *  driveForSeconds: Drives the robot in a straight line. Can drive the
+ *  robot either skids first or wheels first, for any duration of time
+ *  and motor power percentage.
+ *
+ * @param bool skidFirst: Controls whether the robot drives skid first or wheels-first.
+ * @param double seconds: The number of seconds for which the robot will drive.
+ * @param int motorPowerPercent: The percentage at which the robot will drive.
+ * */
 void driveForSeconds(bool skidFirst, double seconds, int motorPowerPercent) {
     LCD.WriteLine("Driving for ");
     LCD.Write(seconds);
@@ -574,7 +583,23 @@ void turnOnStart() {
     turnInPlace(COUNTER_CLOCKWISE, secondsToTurn, TURN_POWER);
 }
 
-// Navigates from the starting box to the lever, flips the lever, then drives back
+/*
+ * Navigates through the course to complete the first performance test.
+ * This function first moves the servo motor into the 120 degree position,
+ * at which point it prompts the user to rotate the arm to the correct
+ * position so that when the servo is set to 0 degrees, the arm will hit
+ * the lever. Once the user presses the screen, it calls a function to
+ * wait for the red light to come on. When it detects the red light,
+ * the function calls a turn function to rotate
+ * the robot 45 degrees counerclockwise to align it with the ramp. It
+ * then calls the driveForSeconds function to
+ * drive the robot from the starting box up the ramp. At the top of the
+ * ramp, it calls the turn function to turn the robot around nearly 180
+ * degrees, then calls the drive function again to drive the robot forward
+ * the last few inches. The function then sets the servo arm's position
+ * back to 0 to flip the lever and calls the drive function to drive back
+ * down the ramp to the starting box.
+ */
 void performanceTestOne () {
 
     // Calibration values:
@@ -638,7 +663,9 @@ void printShaftEncoderValues () {
     }
 }
 
-// MAIN FUNCTION
+/*
+ * Main function: Calls whatever other function the robot is to run.
+ */
 int main(void)
 {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
