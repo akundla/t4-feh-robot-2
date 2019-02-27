@@ -45,9 +45,11 @@ AnalogInputPin rightOptosensor (FEHIO::P2_0);
 DigitalEncoder left_encoder(FEHIO::P1_7);
 DigitalEncoder right_encoder(FEHIO::P1_0);
 
-#define LEFT_TICKS_PER_REV 260
-#define RIGHT_TICKS_PER_REV 350
-// It goes about 277 - 289
+#define TICKS_PER_REV 48
+#define WHEEL_RADIUS 1.75
+#define WHEEL_CIRCUMFERENCE 9.62112750162
+#define INCHES_PER_TICK 0.20044
+#define TICKS_PER_INCH 4.989025692
 
 //MOTORS
 //Assign the right and left motors to motor ports with a max voltage of 9.0V
@@ -212,123 +214,6 @@ void detectBlueLight() {
     } else {
         LCD.WriteLine("Blue Light not detected");
     }
-}
-
-// EXPLORATION 2 CODE
-void driveDistanceForward(int percent, int counts) //using encoders
-{
-    //Reset encoder counts
-    right_encoder.ResetCounts();
-    left_encoder.ResetCounts();
-
-    //Set both motors to desired percent
-    rightMotor.SetPercent(percent);
-    leftMotor.SetPercent(-percent);
-
-    // Runs motors while the average of the left and right encoder is less than counts,
-    //keep running motors
-    while(right_encoder.Counts() < counts) {
-        LCD.WriteLine("L: ");
-        LCD.Write(left_encoder.Counts());
-        LCD.WriteLine("R: ");
-        LCD.WriteLine(right_encoder.Counts());
-        LCD.WriteLine("");
-    }
-
-    LCD.Clear();
-
-    LCD.WriteLine("L: ");
-    LCD.Write(left_encoder.Counts());
-    LCD.WriteLine("R: ");
-    LCD.WriteLine(right_encoder.Counts());
-    LCD.WriteLine("");
-
-    //Turn off motors
-    rightMotor.Stop();
-    leftMotor.Stop();
-}
-
-
-// TODO: Calibrate this to turn the correct direction. In the exploration this actually turned left.
-// TODO: Use the percent parameter to specify how fast to turn
-void turn_right(int percent, int counts) {
-    // Reset encoder counts
-    right_encoder.ResetCounts();
-    left_encoder.ResetCounts();
-
-    // Set both motors to desired percent
-    rightMotor.SetPercent(-15);
-    leftMotor.SetPercent(30);
-
-    // Runs motors while the average of the left and right encoder is less than counts
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2.0 < counts);
-
-    //Turn off motors
-    rightMotor.Stop();
-    leftMotor.Stop();
- }
-
-
-// TODO: Calibrate this to turn the correct direction. In the exploration this actually turned right.
-// TODO: Use the percent parameter to specify how fast to turn
-void turn_left(int percent, int counts) {
-    //Reset encoder counts
-    right_encoder.ResetCounts();
-    left_encoder.ResetCounts();
-
-    //Set both motors to desired percent
-    rightMotor.SetPercent(30);
-    leftMotor.SetPercent(-15);
-
-    // Runs motors while the average of the left and right encoder is less than counts
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2.0 < counts);
-
-    //Turn off motors
-    rightMotor.Stop();
-    leftMotor.Stop();
- }
-
-void explorationTwoShaftEncoders () {
-    //Input power level here
-    int motor_percent = 25;
-    // How many ticks the encoder reports per revolution
-    int ticksPerRevolution = 48;
-    // Number of ticks to turn should be similar one revolution
-    // TODO: Test this value
-    int ticksPerTurn = 48;
-
-    // The number of ticks to move
-    int ticksToMove = ticksPerRevolution;
-
-    // Garbage variables for touch screen
-    float x, y;
-
-    //Initialize the screen
-    LCD.Clear(BLACK);
-    LCD.SetFontColor(WHITE);
-
-    LCD.WriteLine("Shaft Encoder Exploration Test");
-    LCD.WriteLine("Touch the screen to begin");
-    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
-    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
-
-    // Move forward one revolution
-    driveDistanceForward(motor_percent, ticksToMove);
-
-    // Call turn right function
-    turn_right(motor_percent, ticksPerTurn);
-
-    // Move forward one revolution
-    driveDistanceForward(motor_percent, ticksToMove);
-
-    // call turn left function
-    turn_left(motor_percent, ticksPerTurn);
-
-    //reset expected counts to move 4 inches
-    ticksToMove = 162;
-
-    // Drive forward one revolution
-    driveDistanceForward(motor_percent, ticksToMove);
 }
 
 // COMBINATION FUNCTIONS
@@ -542,6 +427,60 @@ void driveForSeconds(bool skidFirst, double seconds, int motorPowerPercent) {
     rightMotor.Stop();
 }
 
+void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //using encoders
+{
+    //Reset encoder counts
+    right_encoder.ResetCounts();
+    left_encoder.ResetCounts();
+
+    LCD.WriteLine("Driving for ");
+    LCD.Write(inches);
+    LCD.Write(" inches");
+
+    // Left and Right motor must be driven at different percentages
+    double leftMotorPowerPercent = 0.0;
+    double rightMotorPowerPercent = 0.0;
+
+    // Drives skids first
+    if (skidFirst) {
+        leftMotorPowerPercent = motorPowerPercent + LEFT_MOTOR_OFFSET;
+        rightMotorPowerPercent = -motorPowerPercent;
+    }
+    // Drives wheels first
+    else {
+        leftMotorPowerPercent = -(motorPowerPercent + LEFT_MOTOR_OFFSET);
+        rightMotorPowerPercent = motorPowerPercent;
+    }
+
+    // Sets the motors in motion
+    leftMotor.SetPercent(leftMotorPowerPercent);
+    rightMotor.SetPercent(rightMotorPowerPercent);
+
+    double counts = inches * TICKS_PER_INCH;
+
+    // Runs motors while the average of the left and right encoder is less than counts,
+    //keep running motors
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts) {
+        LCD.WriteLine("L: ");
+        LCD.Write(left_encoder.Counts());
+        LCD.WriteLine("R: ");
+        LCD.WriteLine(right_encoder.Counts());
+        LCD.WriteLine("");
+    }
+
+    //Turn off motors
+    rightMotor.Stop();
+    leftMotor.Stop();
+
+    LCD.Clear();
+
+    LCD.WriteLine("L: ");
+    LCD.Write(left_encoder.Counts());
+    LCD.WriteLine("R: ");
+    LCD.WriteLine(right_encoder.Counts());
+    LCD.WriteLine("");
+}
+
 void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
     LCD.WriteLine("Turning around");
 
@@ -566,6 +505,37 @@ void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
 
     // Turns for the specified duration
     Sleep(seconds);
+
+    // Stops both motors
+    leftMotor.Stop();
+    rightMotor.Stop();
+}
+
+void turnCountsInPlace(bool turnClockwise, int counts, int motorPowerPercent) {
+    LCD.WriteLine("Turning in place with counts");
+
+    // Left and Right motor must be driven at different percentages
+    double leftMotorPowerPercent = 0.0;
+    double rightMotorPowerPercent = 0.0;
+
+    // Turns clockwise
+    if (turnClockwise) {
+        leftMotorPowerPercent = -(motorPowerPercent + LEFT_MOTOR_OFFSET);
+        rightMotorPowerPercent = -motorPowerPercent;
+    }
+    // Turns counterclockwise
+    else {
+        leftMotorPowerPercent = motorPowerPercent + LEFT_MOTOR_OFFSET;
+        rightMotorPowerPercent = motorPowerPercent;
+    }
+
+    // Sets the motors in motion
+    leftMotor.SetPercent(leftMotorPowerPercent);
+    rightMotor.SetPercent(rightMotorPowerPercent);
+
+    //While the average of the left and right encoder are less than counts,
+    //keep running motors
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
 
     // Stops both motors
     leftMotor.Stop();
@@ -694,6 +664,33 @@ void performanceTestTwo () {
     driveForSeconds(SKID_FIRST, secondsToFirstDDRButton, DRIVE_POWER);
 }
 
+void performanceTestTwoCounts () {
+
+    double inchesToDriveOnStart = 4.0;
+    double inchesToDriveToButton = 18.0;
+
+    //Calibration Values
+    const double secondsToFirstDDRButton = 5.0;
+    const double secondsAfterStart = 0.5;
+
+    //Print test information to screen
+    LCD.WriteLine("Performance test 2");
+    LCD.WriteLine("Waiting for start light...");
+
+    //Robot will begin on start light
+    waitForStartLight();
+
+    LCD.WriteLine("Driving...");
+
+    driveForSeconds(SKID_FIRST, inchesToDriveOnStart, DRIVE_POWER);
+
+    //Turn Clockwise about 45 degrees to face DDR buttons
+    turnOnStart();
+
+    //Drive to the first DDR button
+    driveForSeconds(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER);
+}
+
 // Exploration 3
 
 void printRPSLocation() {
@@ -722,70 +719,6 @@ void printRPSLocation() {
        Sleep(10); //wait for a 10ms to avoid updating the screen too quickly
    }
     //we will never get here because of the infinite while loop
-}
-
-// TODO: Update these declarations
-//Declarations for encoders & motors
-DigitalEncoder right_encoder(FEHIO::P0_1);
-DigitalEncoder left_encoder(FEHIO::P0_0);
-FEHMotor right_motor(FEHMotor::Motor1, 9.0);
-FEHMotor left_motor(FEHMotor::Motor0, 9.0);
-
-void move_forward(int percent, int counts) //using encoders
-{
-    //Reset encoder counts
-    right_encoder.ResetCounts();
-    left_encoder.ResetCounts();
-
-    //Set both motors to desired percent
-    right_motor.SetPercent(percent);
-    left_motor.SetPercent(percent);
-
-    //While the average of the left and right encoder are less than counts,
-    //keep running motors
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
-
-    //Turn off motors
-    right_motor.Stop();
-    left_motor.Stop();
-}
-
-void turn_right(int percent, int counts) //using encoders
-{
-    //Reset encoder counts
-    right_encoder.ResetCounts();
-    left_encoder.ResetCounts();
-
-    //Set both motors to desired percent
-    right_motor.SetPercent(-percent);
-    left_motor.SetPercent(percent);
-
-    //While the average of the left and right encoder are less than counts,
-    //keep running motors
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
-
-    //Turn off motors
-    right_motor.Stop();
-    left_motor.Stop();
-}
-
-void turn_left(int percent, int counts) //using encoders
-{
-    //Reset encoder counts
-    right_encoder.ResetCounts();
-    left_encoder.ResetCounts();
-
-    //Set both motors to desired percent
-    right_motor.SetPercent(percent);
-    left_motor.SetPercent(-percent);
-
-    //While the average of the left and right encoder are less than counts,
-    //keep running motors
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
-
-    //Turn off motors
-    right_motor.Stop();
-    left_motor.Stop();
 }
 
 void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direction
@@ -855,8 +788,40 @@ void check_heading(float heading) //using RPS
     //or close to 0 degrees)
 }
 
+// EXPLORATION 2 CODE
+
+void explorationTwoShaftEncoders () {
+
+    // Garbage variables for touch screen
+    float x, y;
+
+    //Initialize the screen
+    LCD.Clear(BLACK);
+    LCD.SetFontColor(WHITE);
+
+    LCD.WriteLine("Shaft Encoder Exploration Test");
+    LCD.WriteLine("Touch the screen to begin");
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
+
+    // Move forward one revolution
+    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+
+    // Call turn right function
+    turnCountsInPlace(CLOCKWISE, TICKS_PER_REV, TURN_POWER);
+
+    // Move forward one revolution
+    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+
+    // call turn left function
+    turnCountsInPlace(COUNTER_CLOCKWISE, TICKS_PER_REV, TURN_POWER);
+
+    // Move forward one revolution
+    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+}
+
 // TODO: Turn into helper function
-int main(void)
+void testRPSAndDataLogging()
 {
     float touch_x,touch_y;
 
@@ -867,11 +832,7 @@ int main(void)
     while(!LCD.Touch(&touch_x,&touch_y)); //Wait for touchscreen press
 
     //STUDENT CODE HERE
-
-    return 0;
 }
-
-
 
 /*
  * Main function: Calls whatever other function the robot is to run.
@@ -883,7 +844,7 @@ int main(void)
     //calibrateServo();
 
     // Call desired function
-    printRPSLocation();
+    driveForInches(SKID_FIRST, DRIVE_POWER, 12);
 
     // Just a conventional best practice
     return 0;
