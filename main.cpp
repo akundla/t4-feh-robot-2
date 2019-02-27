@@ -2,6 +2,7 @@
 #include <FEHLCD.h>
 #include <FEHIO.h>
 #include <FEHUtility.h>
+#include <FEHRPS.h>
 
 //Include the FEHMotor library
 #include <FEHMotor.h>
@@ -693,6 +694,185 @@ void performanceTestTwo () {
     driveForSeconds(SKID_FIRST, secondsToFirstDDRButton, DRIVE_POWER);
 }
 
+// Exploration 3
+
+void printRPSLocation() {
+    float touch_x, touch_y;
+
+    //Call this function to initialize the RPS to a course
+    RPS.InitializeTouchMenu();
+
+    //Wait for touchscreen to be pressed
+    LCD.WriteLine("Press Screen to Start");
+    while(!LCD.Touch(&touch_x, &touch_y));
+
+    LCD.Clear();
+
+   //Write initial screen info
+   LCD.WriteRC("RPS Test Program",0,0);
+   LCD.WriteRC("X Position:",2,0);
+   LCD.WriteRC("Y Position:",3,0);
+   LCD.WriteRC("   Heading:",4,0);
+
+   while (true) {
+       LCD.WriteRC(RPS.X(),2,12); //update the x coordinate
+       LCD.WriteRC(RPS.Y(),3,12); //update the y coordinate
+       LCD.WriteRC(RPS.Heading(),4,12); //update the heading
+
+       Sleep(10); //wait for a 10ms to avoid updating the screen too quickly
+   }
+    //we will never get here because of the infinite while loop
+}
+
+// TODO: Update these declarations
+//Declarations for encoders & motors
+DigitalEncoder right_encoder(FEHIO::P0_1);
+DigitalEncoder left_encoder(FEHIO::P0_0);
+FEHMotor right_motor(FEHMotor::Motor1, 9.0);
+FEHMotor left_motor(FEHMotor::Motor0, 9.0);
+
+void move_forward(int percent, int counts) //using encoders
+{
+    //Reset encoder counts
+    right_encoder.ResetCounts();
+    left_encoder.ResetCounts();
+
+    //Set both motors to desired percent
+    right_motor.SetPercent(percent);
+    left_motor.SetPercent(percent);
+
+    //While the average of the left and right encoder are less than counts,
+    //keep running motors
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+
+    //Turn off motors
+    right_motor.Stop();
+    left_motor.Stop();
+}
+
+void turn_right(int percent, int counts) //using encoders
+{
+    //Reset encoder counts
+    right_encoder.ResetCounts();
+    left_encoder.ResetCounts();
+
+    //Set both motors to desired percent
+    right_motor.SetPercent(-percent);
+    left_motor.SetPercent(percent);
+
+    //While the average of the left and right encoder are less than counts,
+    //keep running motors
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+
+    //Turn off motors
+    right_motor.Stop();
+    left_motor.Stop();
+}
+
+void turn_left(int percent, int counts) //using encoders
+{
+    //Reset encoder counts
+    right_encoder.ResetCounts();
+    left_encoder.ResetCounts();
+
+    //Set both motors to desired percent
+    right_motor.SetPercent(percent);
+    left_motor.SetPercent(-percent);
+
+    //While the average of the left and right encoder are less than counts,
+    //keep running motors
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+
+    //Turn off motors
+    right_motor.Stop();
+    left_motor.Stop();
+}
+
+void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direction
+{
+    //check whether the robot is within an acceptable range
+    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1)
+    {
+        if(RPS.X() > x_coordinate)
+        {
+            //pulse the motors for a short duration in the correct direction
+
+            //<ADD CODE HERE>
+        }
+        else if(RPS.X() < x_coordinate)
+        {
+            //pulse the motors for a short duration in the correct direction
+
+            //<ADD CODE HERE>
+        }
+    }
+}
+
+void check_y_minus(float y_coordinate) //using RPS while robot is in the -y direction
+{
+    //check whether the robot is within an acceptable range
+    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1)
+    {
+        if(RPS.Y() > y_coordinate)
+        {
+            //pulse the motors for a short duration in the correct direction
+
+            //<ADD CODE HERE>
+        }
+        else if(RPS.Y() < y_coordinate)
+        {
+            //pulse the motors for a short duration in the correct direction
+
+            //<ADD CODE HERE>
+        }
+    }
+}
+
+void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direction
+{
+    //check whether the robot is within an acceptable range
+    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1)
+    {
+        if(RPS.Y() > y_coordinate)
+        {
+            //pulse the motors for a short duration in the correct direction
+
+            //<ADD CODE HERE>
+        }
+        else if(RPS.Y() < y_coordinate)
+        {
+            //pulse the motors for a short duration in the correct direction
+
+            //<ADD CODE HERE>
+        }
+    }
+}
+
+void check_heading(float heading) //using RPS
+{
+    //you will need to fill out this one yourself and take into account
+    //the edge conditions (when you want the robot to go to 0 degrees
+    //or close to 0 degrees)
+}
+
+// TODO: Turn into helper function
+int main(void)
+{
+    float touch_x,touch_y;
+
+    RPS.InitializeTouchMenu();
+
+    LCD.WriteLine("RPS & Data Logging Test");
+    LCD.WriteLine("Press Screen To Start");
+    while(!LCD.Touch(&touch_x,&touch_y)); //Wait for touchscreen press
+
+    //STUDENT CODE HERE
+
+    return 0;
+}
+
+
+
 /*
  * Main function: Calls whatever other function the robot is to run.
  */
@@ -700,13 +880,10 @@ void performanceTestTwo () {
 int main(void)
 {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
-    calibrateServo();
+    //calibrateServo();
 
     // Call desired function
-    //performanceTestOne();
-    performanceTestTwo();
-
-
+    printRPSLocation();
 
     // Just a conventional best practice
     return 0;
