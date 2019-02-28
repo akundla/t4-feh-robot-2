@@ -474,11 +474,15 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
 
     LCD.Clear();
 
-    LCD.WriteLine("L: ");
-    LCD.Write(left_encoder.Counts());
-    LCD.WriteLine("R: ");
+    LCD.Write("Drove for ");
+    LCD.Write(inches);
+    LCD.WriteLine(" inches");
+
+    LCD.WriteLine("Final Encoder Counts: ");
+    LCD.Write("<-- Left Encoder: ");
+    LCD.WriteLine(left_encoder.Counts());
+    LCD.Write("--> Right Encoder: ");
     LCD.WriteLine(right_encoder.Counts());
-    LCD.WriteLine("");
 }
 
 void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
@@ -512,6 +516,11 @@ void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
 }
 
 void turnCountsInPlace(bool turnClockwise, int counts, int motorPowerPercent) {
+
+    //Reset encoder counts
+    right_encoder.ResetCounts();
+    left_encoder.ResetCounts();
+
     LCD.WriteLine("Turning in place with counts");
 
     // Left and Right motor must be driven at different percentages
@@ -622,15 +631,29 @@ void printShaftEncoderValues () {
     right_encoder.ResetCounts();
     left_encoder.ResetCounts();
 
-    // Runs motors while the average of the left and right encoder is less than counts,
-    //keep running motors
-    while (true) {
-        LCD.WriteLine("L: ");
-        LCD.WriteLine(left_encoder.Counts());
+    LCD.WriteLine("Encoder Counts: ");
 
-        LCD.WriteLine("R: ");
-        LCD.WriteLine(right_encoder.Counts());
-        LCD.WriteLine("");
+    int leftEncoderLast = left_encoder.Counts();
+    int rightEncoderLast = right_encoder.Counts();
+
+    LCD.Write("--> Left Encoder: ");
+    LCD.WriteLine(left_encoder.Counts());
+    LCD.Write("<-- Right Encoder: ");
+    LCD.WriteLine(right_encoder.Counts());
+
+    while (true) {
+        if ((left_encoder.Counts() != leftEncoderLast) || (right_encoder.Counts() != rightEncoderLast)) {
+
+            int leftEncoderLast = left_encoder.Counts();
+            int rightEncoderLast = right_encoder.Counts();
+
+            LCD.Clear();
+
+            LCD.Write("--> Left Encoder: ");
+            LCD.WriteLine(left_encoder.Counts());
+            LCD.Write("<-- Right Encoder: ");
+            LCD.WriteLine(right_encoder.Counts());
+        }
     }
 }
 
@@ -666,12 +689,12 @@ void performanceTestTwo () {
 
 void performanceTestTwoCounts () {
 
-    double inchesToDriveOnStart = 4.0;
-    double inchesToDriveToButton = 18.0;
-
     //Calibration Values
-    const double secondsToFirstDDRButton = 5.0;
-    const double secondsAfterStart = 0.5;
+    const double inchesToDriveOnStart = 2.5;
+    // 11 counts makes a 45 degree turn. Don't mess with it.
+    const int countsToTurn = 11;
+    // 8 Inches is virtually perfect
+    const double inchesToDriveToButton = 8.0;
 
     //Print test information to screen
     LCD.WriteLine("Performance test 2");
@@ -682,13 +705,50 @@ void performanceTestTwoCounts () {
 
     LCD.WriteLine("Driving...");
 
-    driveForSeconds(SKID_FIRST, inchesToDriveOnStart, DRIVE_POWER);
+    // Drives out from starting box
+    driveForInches(SKID_FIRST, inchesToDriveOnStart, DRIVE_POWER);
 
     //Turn Clockwise about 45 degrees to face DDR buttons
-    turnOnStart();
+    turnCountsInPlace(CLOCKWISE, countsToTurn, TURN_POWER);
 
     //Drive to the first DDR button
-    driveForSeconds(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER);
+    driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER);
+
+    // TODO: Get values from the sensor for blue and red lights through the filter.
+    const bool IS_RED = true;
+
+    // Hits the red button. This is DIALED IN, don't recalibrate unless it stops working - AK 8:55PM Wednesday 27th February 2019
+    if (IS_RED) {
+        // Drives the robot up to be level with the red button
+        driveForInches(SKID_FIRST, 4.3, DRIVE_POWER / 2.0);
+
+        // Turn 90 degrees so the wheel-side of the robot faces the buttons
+        turnCountsInPlace(COUNTER_CLOCKWISE, 23, TURN_POWER);
+
+        // Drives the robot into the button
+        driveForSeconds(WHEELS_FIRST, 6.0, DRIVE_POWER / 3);
+
+        // Releases the button
+        driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
+    }
+    // Otherwise the light is blue
+    else {
+        // TODO: Calibrate, it's definitely more than 5
+        const double inchesToBlueButton = 9.0;
+
+        // Drives the robot up to be level with the red button
+        driveForInches(SKID_FIRST, 4.3, DRIVE_POWER / 2.0);
+
+        // Turn 90 degrees so the wheel-side of the robot faces the buttons
+        turnCountsInPlace(COUNTER_CLOCKWISE, 23, TURN_POWER);
+
+        // Drives the robot into the button
+        driveForSeconds(WHEELS_FIRST, 6.0, DRIVE_POWER / 3);
+
+        // Releases the button
+        driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
+
+    }
 }
 
 // Exploration 3
@@ -804,20 +864,32 @@ void explorationTwoShaftEncoders () {
     while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
     while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
 
+    LCD.WriteLine("1. Starting driving");
+
     // Move forward one revolution
     driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+
+    LCD.WriteLine("2. Driving complete, turning");
 
     // Call turn right function
-    turnCountsInPlace(CLOCKWISE, TICKS_PER_REV, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, TICKS_PER_REV / 2.0, TURN_POWER);
+
+    LCD.WriteLine("3. Turning complete, driving");
 
     // Move forward one revolution
     driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+
+    LCD.WriteLine("4. Driving complete, turning");
 
     // call turn left function
-    turnCountsInPlace(COUNTER_CLOCKWISE, TICKS_PER_REV, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, TICKS_PER_REV / 2.0, TURN_POWER);
+
+    LCD.WriteLine("5. Turning complete, driving");
 
     // Move forward one revolution
     driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+
+    LCD.WriteLine("6. Driving complete, Done. ");
 }
 
 // TODO: Turn into helper function
@@ -844,7 +916,7 @@ int main(void)
     //calibrateServo();
 
     // Call desired function
-    driveForInches(SKID_FIRST, DRIVE_POWER, 12);
+    performanceTestTwoCounts();
 
     // Just a conventional best practice
     return 0;
