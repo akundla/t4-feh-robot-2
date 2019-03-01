@@ -720,11 +720,11 @@ void performanceTestTwoCounts () {
     //Drive to the first DDR button
     driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER);
 
-
+    // Pauses to allow the robot to settle
     Sleep(1.0);
 
     // TODO: Get values from the sensor for blue and red lights through the filter.
-    bool IS_RED;
+    bool IS_RED = false;
     if (cdsCell.Value() < RED_LIGHT_RED_F_V_AVG + MoE && cdsCell.Value() > RED_LIGHT_RED_F_V_AVG - MoE)
     {
         IS_RED = true;
@@ -733,10 +733,10 @@ void performanceTestTwoCounts () {
     }
     else
     {
-        IS_RED = false;
         LCD.WriteLine("Detected Blue Light");
         Sleep(5.0);
     }
+
     // Hits the red button. This is DIALED IN, don't recalibrate unless it stops working - AK 8:55PM Wednesday 27th February 2019
     if (IS_RED) {
         // Drives the robot up to be level with the red button
@@ -748,6 +748,7 @@ void performanceTestTwoCounts () {
         // Drives the robot into the button
         driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
 
+        // Holds the button down
         Sleep(5.0);
 
         // Releases the button
@@ -761,17 +762,6 @@ void performanceTestTwoCounts () {
 
         //Turn to face acrylic ramp
         turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
-
-        //Drive to the foosball counter
-        driveForInches(SKID_FIRST, 45, DRIVE_POWER);
-
-        //Move robot left by turning and driving straight
-        turnCountsInPlace(COUNTER_CLOCKWISE, 11, TURN_POWER);
-        driveForInches(SKID_FIRST, 2, DRIVE_POWER / 2.0);
-
-        //turn toward foosball and drive to hit it
-        turnCountsInPlace(CLOCKWISE, 11, TURN_POWER);
-        driveForInches(SKID_FIRST, 15, DRIVE_POWER / 2.0);
     }
     // Otherwise the light is blue
     else {
@@ -787,23 +777,23 @@ void performanceTestTwoCounts () {
         // Drives the robot into the button
         driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
 
+        // Hold down the button
         Sleep(5.0);
 
         // Releases the button
         driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
-
-        //Drive to the foosball counter
-        driveForInches(SKID_FIRST, 45, DRIVE_POWER);
-
-        //Move robot left by turning and driving straight
-        turnCountsInPlace(COUNTER_CLOCKWISE, 11, TURN_POWER);
-        driveForInches(SKID_FIRST, 2, DRIVE_POWER / 2.0);
-
-        //turn toward foosball and drive to hit it
-        turnCountsInPlace(CLOCKWISE, 11, TURN_POWER);
-        driveForInches(SKID_FIRST, 15, DRIVE_POWER / 2.0);
-
     }
+
+    //Drive to the foosball counter
+    driveForInches(SKID_FIRST, 45, DRIVE_POWER);
+
+    //Move robot left by turning and driving straight
+    turnCountsInPlace(COUNTER_CLOCKWISE, 11, TURN_POWER);
+    driveForInches(SKID_FIRST, 2, DRIVE_POWER / 2.0);
+
+    //turn toward foosball and drive to hit it
+    turnCountsInPlace(CLOCKWISE, 11, TURN_POWER);
+    driveForInches(SKID_FIRST, 15, DRIVE_POWER / 2.0);
 }
 
 // Exploration 3
