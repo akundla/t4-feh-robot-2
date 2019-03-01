@@ -68,6 +68,11 @@ FEHServo servo (FEHServo::Servo0);
 #define RED_LIGHT_NO_FILTER_V_AVG 0.188
 #define BLUE_BACKLGROUND_V_AVG 3.200
 
+// CDS Cell average Voltage with red filters
+#define BLANK_STARTER_RED_F_V_AVG 1.745
+#define RED_LIGHT_RED_F_V_AVG 0.313
+#define BLUE_LIGHT_RED_F_V_AVG 0.895
+
 // Ratio that a CDS cell reading is multiplied by to create a degree (0 - 180) to which to move the servo
 // CDS cell has an approximate voltage range of 0 - 3.400 volts. Servo has range of 0 - 180 degrees. 180 / 3.400 = 52.94
 #define RATIO_SERVO_DEGREE_TO_CDS_CELL 52.94
@@ -179,11 +184,11 @@ void printCDsCellValues() {
     // Runs continuously
     while(true) {
         //Print the value of the CdS cell to the screen.
-        LCD.Write("CDs Cell: ");
+        LCD.WriteLine("CDs Cell: ");
         LCD.Write(cdsCell.Value());
         LCD.Write(" V");
 
-        LCD.Clear(BLACK);
+        Sleep(1.0);
     }
 }
 
@@ -382,7 +387,7 @@ void FollowRedLine(){
 void waitForStartLight () {
 
     // Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red
-    while (cdsCell.Value() > RED_LIGHT_NO_FILTER_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_NO_FILTER_V_AVG - MoE) {
+    while (cdsCell.Value() > RED_LIGHT_RED_F_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_RED_F_V_AVG - MoE) {
         LCD.WriteLine(cdsCell.Value());
     }
 }
@@ -460,7 +465,8 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
 
     // Runs motors while the average of the left and right encoder is less than counts,
     //keep running motors
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts) {
+    float timeout = TimeNow();
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts && ((TimeNow() - timeout) < 5)) {
         LCD.WriteLine("L: ");
         LCD.Write(left_encoder.Counts());
         LCD.WriteLine("R: ");
@@ -690,11 +696,11 @@ void performanceTestTwo () {
 void performanceTestTwoCounts () {
 
     //Calibration Values
-    const double inchesToDriveOnStart = 2.5;
+    const double inchesToDriveOnStart = 3.40;
     // 11 counts makes a 45 degree turn. Don't mess with it.
     const int countsToTurn = 11;
     // 8 Inches is virtually perfect
-    const double inchesToDriveToButton = 8.0;
+    const double inchesToDriveToButton = 7.5;
 
     //Print test information to screen
     LCD.WriteLine("Performance test 2");
@@ -714,39 +720,88 @@ void performanceTestTwoCounts () {
     //Drive to the first DDR button
     driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER);
 
-    // TODO: Get values from the sensor for blue and red lights through the filter.
-    const bool IS_RED = true;
 
+    Sleep(1.0);
+
+    // TODO: Get values from the sensor for blue and red lights through the filter.
+    bool IS_RED;
+    if (cdsCell.Value() < RED_LIGHT_RED_F_V_AVG + MoE && cdsCell.Value() > RED_LIGHT_RED_F_V_AVG - MoE)
+    {
+        IS_RED = true;
+        LCD.WriteLine("Detected Red Light");
+        Sleep(5.0);
+    }
+    else
+    {
+        IS_RED = false;
+        LCD.WriteLine("Detected Blue Light");
+        Sleep(5.0);
+    }
     // Hits the red button. This is DIALED IN, don't recalibrate unless it stops working - AK 8:55PM Wednesday 27th February 2019
     if (IS_RED) {
         // Drives the robot up to be level with the red button
-        driveForInches(SKID_FIRST, 4.3, DRIVE_POWER / 2.0);
+        driveForInches(SKID_FIRST, 4.0, DRIVE_POWER / 2.0);
 
         // Turn 90 degrees so the wheel-side of the robot faces the buttons
-        turnCountsInPlace(COUNTER_CLOCKWISE, 23, TURN_POWER);
+        turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
 
         // Drives the robot into the button
-        driveForSeconds(WHEELS_FIRST, 6.0, DRIVE_POWER / 3);
+        driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
+
+        Sleep(5.0);
 
         // Releases the button
         driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
+
+        //Turn 90 Degrees to face the second light
+        turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
+
+        //Drive to second light
+        driveForInches(SKID_FIRST, 3.75, DRIVE_POWER / 2.0);
+
+        //Turn to face acrylic ramp
+        turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
+
+        //Drive to the foosball counter
+        driveForInches(SKID_FIRST, 45, DRIVE_POWER);
+
+        //Move robot left by turning and driving straight
+        turnCountsInPlace(COUNTER_CLOCKWISE, 11, TURN_POWER);
+        driveForInches(SKID_FIRST, 2, DRIVE_POWER / 2.0);
+
+        //turn toward foosball and drive to hit it
+        turnCountsInPlace(CLOCKWISE, 11, TURN_POWER);
+        driveForInches(SKID_FIRST, 15, DRIVE_POWER / 2.0);
     }
     // Otherwise the light is blue
     else {
         // TODO: Calibrate, it's definitely more than 5
         const double inchesToBlueButton = 9.0;
 
-        // Drives the robot up to be level with the red button
-        driveForInches(SKID_FIRST, 4.3, DRIVE_POWER / 2.0);
+        // Drives the robot up to be level with the second button
+        driveForInches(SKID_FIRST, 9.0, DRIVE_POWER / 2.0);
 
         // Turn 90 degrees so the wheel-side of the robot faces the buttons
-        turnCountsInPlace(COUNTER_CLOCKWISE, 23, TURN_POWER);
+        turnCountsInPlace(COUNTER_CLOCKWISE, 24, TURN_POWER);
 
         // Drives the robot into the button
-        driveForSeconds(WHEELS_FIRST, 6.0, DRIVE_POWER / 3);
+        driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
+
+        Sleep(5.0);
 
         // Releases the button
         driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
+
+        //Drive to the foosball counter
+        driveForInches(SKID_FIRST, 45, DRIVE_POWER);
+
+        //Move robot left by turning and driving straight
+        turnCountsInPlace(COUNTER_CLOCKWISE, 11, TURN_POWER);
+        driveForInches(SKID_FIRST, 2, DRIVE_POWER / 2.0);
+
+        //turn toward foosball and drive to hit it
+        turnCountsInPlace(CLOCKWISE, 11, TURN_POWER);
+        driveForInches(SKID_FIRST, 15, DRIVE_POWER / 2.0);
 
     }
 }
@@ -918,6 +973,10 @@ int main(void)
     // Call desired function
     performanceTestTwoCounts();
 
+    //printShaftEncoderValues();
+
+
     // Just a conventional best practice
     return 0;
 }
+
