@@ -826,73 +826,6 @@ void printRPSLocation() {
     //we will never get here because of the infinite while loop
 }
 
-void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direction
-{
-    //check whether the robot is within an acceptable range
-    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1)
-    {
-        if(RPS.X() > x_coordinate)
-        {
-            //pulse the motors for a short duration in the correct direction
-
-            //<ADD CODE HERE>
-        }
-        else if(RPS.X() < x_coordinate)
-        {
-            //pulse the motors for a short duration in the correct direction
-
-            //<ADD CODE HERE>
-        }
-    }
-}
-
-void check_y_minus(float y_coordinate) //using RPS while robot is in the -y direction
-{
-    //check whether the robot is within an acceptable range
-    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1)
-    {
-        if(RPS.Y() > y_coordinate)
-        {
-            //pulse the motors for a short duration in the correct direction
-
-            //<ADD CODE HERE>
-        }
-        else if(RPS.Y() < y_coordinate)
-        {
-            //pulse the motors for a short duration in the correct direction
-
-            //<ADD CODE HERE>
-        }
-    }
-}
-
-void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direction
-{
-    //check whether the robot is within an acceptable range
-    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1)
-    {
-        if(RPS.Y() > y_coordinate)
-        {
-            //pulse the motors for a short duration in the correct direction
-
-            //<ADD CODE HERE>
-        }
-        else if(RPS.Y() < y_coordinate)
-        {
-            //pulse the motors for a short duration in the correct direction
-
-            //<ADD CODE HERE>
-        }
-    }
-}
-
-void check_heading(float heading) //using RPS
-{
-    //you will need to fill out this one yourself and take into account
-    //the edge conditions (when you want the robot to go to 0 degrees
-    //or close to 0 degrees)
-}
-
 // EXPLORATION 2 CODE
 
 void explorationTwoShaftEncoders () {
@@ -937,20 +870,6 @@ void explorationTwoShaftEncoders () {
     LCD.WriteLine("6. Driving complete, Done. ");
 }
 
-// TODO: Turn into helper function
-void testRPSAndDataLogging()
-{
-    float touch_x,touch_y;
-
-    RPS.InitializeTouchMenu();
-
-    LCD.WriteLine("RPS & Data Logging Test");
-    LCD.WriteLine("Press Screen To Start");
-    while(!LCD.Touch(&touch_x,&touch_y)); //Wait for touchscreen press
-
-    //STUDENT CODE HERE
-}
-
 /*
  * Main function: Calls whatever other function the robot is to run.
  */
@@ -961,9 +880,7 @@ int main(void)
     //calibrateServo();
 
     // Call desired function
-    performanceTestTwoCounts();
-
-    //printShaftEncoderValues();
+    printShaftEncoderValues();
 
 
     // Just a conventional best practice
