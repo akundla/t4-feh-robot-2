@@ -3,16 +3,10 @@
 #include <FEHIO.h>
 #include <FEHUtility.h>
 #include <FEHRPS.h>
-
-//Include the FEHMotor library
 #include <FEHMotor.h>
-//Include the FEHServo library
 #include <FEHServo.h>
 
 // DECLARE GLOBAL CONSTANTS
-
-// Power offset added to the left motor to make the robot drive straight
-#define LEFT_MOTOR_OFFSET 1.0
 
 #define SKID_FIRST true
 #define WHEELS_FIRST false
@@ -20,26 +14,18 @@
 #define CLOCKWISE true
 #define COUNTER_CLOCKWISE false
 
+// Power offset added to the left motor to make the robot drive straight
+#define LEFT_MOTOR_OFFSET 1.0
 // Standard percentage of motor power for driving forwards or backwards
 #define DRIVE_POWER 40.0
-
 // Standard percentage of motor power for turning the robot in place
 #define TURN_POWER 20.0
+// Standard percentage for motor checking
+#define RPS_POWER 10.0
 
 // SENSORS
 //Declare a CdS Cell sensor as an analog input and assign it to an IO port
 AnalogInputPin cdsCell (FEHIO::P0_0);
-
-
-//Declare a microswitch as a digital input and assign it to an IO port
-DigitalInputPin frontLeftBump (FEHIO::P3_6);
-DigitalInputPin frontRightBump (FEHIO::P3_1);
-DigitalInputPin backLeftBump (FEHIO::P3_7);
-DigitalInputPin backRightBump (FEHIO::P3_0);
-
-AnalogInputPin leftOptosensor (FEHIO::P2_2);
-AnalogInputPin middleOptosensor (FEHIO::P2_1);
-AnalogInputPin rightOptosensor (FEHIO::P2_0);
 
 // ENCODERS
 DigitalEncoder left_encoder(FEHIO::P1_7);
@@ -57,7 +43,18 @@ FEHMotor leftMotor (FEHMotor :: Motor0, 9.0);
 FEHMotor rightMotor (FEHMotor :: Motor1, 9.0);
 
 //Declare a servo motor and assign it to a servo port
-FEHServo servo (FEHServo::Servo0);
+FEHServo lower_servo (FEHServo::Servo7);
+FEHServo upper_servo (FEHServo::Servo0);
+
+//Declare a microswitch as a digital input and assign it to an IO port
+DigitalInputPin frontLeftBump (FEHIO::P3_6);
+DigitalInputPin frontRightBump (FEHIO::P3_1);
+DigitalInputPin backLeftBump (FEHIO::P3_7);
+DigitalInputPin backRightBump (FEHIO::P3_0);
+
+AnalogInputPin leftOptosensor (FEHIO::P2_2);
+AnalogInputPin middleOptosensor (FEHIO::P2_1);
+AnalogInputPin rightOptosensor (FEHIO::P2_0);
 
 // LIGHT CONSTANTS
 // Voltage reading from CDS cell when cell is covered (no light, pitch black)
@@ -78,9 +75,14 @@ FEHServo servo (FEHServo::Servo0);
 #define RATIO_SERVO_DEGREE_TO_CDS_CELL 52.94
 
 // CALIBRATION VALUES
-// Calibration values for Exploration 1 servo
-#define SERVO_MIN 769
-#define SERVO_MAX 2490
+// Calibration values for lower servo
+#define LOWER_SERVO_MIN 769
+#define LOWER_SERVO_MAX 2490
+
+// Calibration values for upper servo
+// TODO: Test
+#define UPPER_SERVO_MIN 670
+#define UPPER_SERVO_MAX 2370
 
 // Constants from exploration 1
 // Left optosensor
@@ -108,10 +110,14 @@ FEHServo servo (FEHServo::Servo0);
 // CALIBRATION FUNCTIONS
 
 // Calibrates the servo tested in Exploration 1
-void calibrateServo() {
-    // Calibrate Servo
-    servo.SetMin(SERVO_MIN);
-    servo.SetMax(SERVO_MAX);
+void calibrateServos() {
+    // Calibrate lower Servo
+    lower_servo.SetMin(LOWER_SERVO_MIN);
+    lower_servo.SetMax(LOWER_SERVO_MAX);
+
+    // Calibrate upper Servo
+    upper_servo.SetMin(UPPER_SERVO_MIN);
+    upper_servo.SetMax(UPPER_SERVO_MAX);
 }
 
 
@@ -203,7 +209,7 @@ void moveServoToLight() {
 
         // Set the servo arm depending on the amount of light from the CDS cell
         // 0 light corresponds to 0 degress and full light to 180 degrees
-        servo.SetDegree( (NO_LIGHT_V - cdsCell.Value() ) * RATIO_SERVO_DEGREE_TO_CDS_CELL);
+        lower_servo.SetDegree( (NO_LIGHT_V - cdsCell.Value() ) * RATIO_SERVO_DEGREE_TO_CDS_CELL);
     }
 }
 
@@ -438,6 +444,8 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
     right_encoder.ResetCounts();
     left_encoder.ResetCounts();
 
+    #define SECONDS_TIMEOUT 8.0
+
     LCD.WriteLine("Driving for ");
     LCD.Write(inches);
     LCD.Write(" inches");
@@ -466,12 +474,19 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
     // Runs motors while the average of the left and right encoder is less than counts,
     //keep running motors
     float timeout = TimeNow();
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts && ((TimeNow() - timeout) < 5)) {
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2.0 < counts && ((TimeNow() - timeout) < SECONDS_TIMEOUT)) {
         LCD.WriteLine("L: ");
         LCD.Write(left_encoder.Counts());
         LCD.WriteLine("R: ");
         LCD.WriteLine(right_encoder.Counts());
         LCD.WriteLine("");
+
+        // The numebr of ticks that the left wheel has traveled more than the right wheel
+        int leftTicksDiff = left_encoder.Counts() - right_encoder.Counts();
+
+        double rightMotorPowerAdjustment = (leftTicksDiff / TICKS_PER_REV) * rightMotorPowerPercent;
+
+        rightMotor.SetPercent(rightMotorPowerPercent);
     }
 
     //Turn off motors
@@ -594,7 +609,7 @@ void performanceTestOne () {
     const double secondsToDriveBack = 6.0;
 
     // Set the servo arm in starting position
-    servo.SetDegree(120);
+    lower_servo.SetDegree(120);
 
     float x, y;
     LCD.WriteLine("Performance test 1");
@@ -621,7 +636,7 @@ void performanceTestOne () {
     // Pauses to allow the robot to settle into place
     Sleep(0.5);
     // Turns the servo arm to hit the lever
-    servo.SetDegree(0);
+    lower_servo.SetDegree(0);
     // Pauses to allow the arm to actually hit said lever
     Sleep(0.5);
 
@@ -670,7 +685,7 @@ void performanceTestTwo () {
     const double secondsAfterStart = 0.5;
 
     //Set initial servo degree
-    servo.SetDegree(180);
+    lower_servo.SetDegree(180);
 
     //Print test information to screen
     LCD.WriteLine("Performance test 2");
@@ -871,22 +886,20 @@ void printRPSLocation() {
 
 void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direction
 {
-    double slowMotorPower = 20.0;
-
     //check whether the robot is within an acceptable range
-    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1 && RPS.Heading() ~= -1 && RPS.Heading() ~= -2)
+    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1 && RPS.Heading() != -1 && RPS.Heading() != -2)
     {
         // Skids are pointing Left
         if (RPS.Heading() > 90 && RPS.Heading() < 270) {
             if(RPS.X() > x_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
             else if(RPS.X() < x_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
         }
         // else the skids are pointing right
@@ -894,12 +907,12 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
             if(RPS.X() > x_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
             else if(RPS.X() < x_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
         }
     }
@@ -908,22 +921,20 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
 
 void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direction
 {
-    double slowMotorPower = 20.0;
-
     //check whether the robot is within an acceptable range
-    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1 && RPS.Heading() ~= -1 && RPS.Heading() ~= -2)
+    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1 && RPS.Heading() != -1 && RPS.Heading() != -2)
     {
         // Skids are pointing up
         if (RPS.Heading() > 0 && RPS.Heading() < 180) {
             if(RPS.Y() > y_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
             else if(RPS.Y() < y_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
         }
         // else the skids are pointing down
@@ -931,12 +942,12 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
             if(RPS.Y() > y_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
             else if(RPS.Y() < y_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, slowMotorPower);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
             }
         }
     }
@@ -944,38 +955,63 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
 
 void check_heading(float heading) //using RPS
 {
+    #define DEGREE_TOLERANCE 4
+    #define SECONDS_TIMEOUT 10
+
+    // The current timeout
+    float timeout = TimeNow();
+
     // While the robot is reading a heading on the course and that heading is not the correct heading
-    while (RPS.Heading() > (heading + 1) || RPS.Heading() < (heading - 1) && RPS.Heading() ~= -1 && RPS.Heading() ~= -2)
+    while (RPS.Heading() > (heading + DEGREE_TOLERANCE) || RPS.Heading() < (heading - DEGREE_TOLERANCE) && RPS.Heading() != -1 && RPS.Heading() != -2 && (TimeNow() - timeout) < SECONDS_TIMEOUT)
     {
         if(RPS.Heading() > heading) {
             // If we should turn clockwise, do that
            if ((RPS.Heading() - heading) <= 180) {
-               turnCountsInPlace(CLOCKWISE, 1, 20);
+               turnCountsInPlace(CLOCKWISE, 1, RPS_POWER);
            }
            // Else we should go counterclockwise
            else {
-               turnCountsInPlace(COUNTER_CLOCKWISE, 1, 20);
+               turnCountsInPlace(COUNTER_CLOCKWISE, 1, RPS_POWER);
            }
         } else if(RPS.Heading() < heading) {
             // If we should turn counterclockwise, do that
            if ((heading - RPS.Heading()) <= 180) {
-               turnCountsInPlace(COUNTER_CLOCKWISE, 1, 20);
+               turnCountsInPlace(COUNTER_CLOCKWISE, 1, RPS_POWER);
            }
            // Else we should go counterclockwise
            else {
-               turnCountsInPlace(CLOCKWISE, 1, 20);
+               turnCountsInPlace(CLOCKWISE, 1, RPS_POWER);
            }
         }
+        Sleep(0.7);
     }
+}
+
+// Rotates the servo arm to drop the coin into the slot
+void dropCoin() {
+    #define DEGREE_STRAIGHT_OUT 120
+    #define DEGREE_VERTICAL_DOWN 90
+    #define SECONDS_TO_WAIT 0.5
+
+    // Rotates lower servo to put the arm in position
+    lower_servo.SetDegree(DEGREE_STRAIGHT_OUT);
+
+    Sleep(SECONDS_TO_WAIT);
+
+    // Rotates upper servo to drop coin
+    upper_servo.SetDegree(DEGREE_VERTICAL_DOWN);
 }
 
 void performanceTestThree() {
 
     //Number of counts for 45 degree turn at beginning
     #define InitialTurn 11
+    #define InchesUpRamp 31.5
+    #define InchesToCoin 5.8
+    #define InchesToCoinSlot 2
 
     //Prepare servo for 180 degree rotation
-    servo.SetDegree(180);
+    lower_servo.SetDegree(180);
 
     //Choose which course for RPS
     RPS.InitializeTouchMenu();
@@ -987,13 +1023,15 @@ void performanceTestThree() {
     turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn, TURN_POWER);
 
     //verify robot is facing in the positive y direction
-    check_heading(90);
+    // check_heading(90);
 
     //Drive robot to top of ramp
-    driveForInches(SKID_FIRST, 32.5, DRIVE_POWER);
+    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER);
+
+    check_heading(90);
 
     //Verify Position with RPS
-    check_y_plus(44.3);
+    check_y_plus(45.3);
 
     //Turn 90 degrees clockwise
     turnCountsInPlace(CLOCKWISE, InitialTurn*2, TURN_POWER);
@@ -1002,7 +1040,10 @@ void performanceTestThree() {
     check_heading(0);
 
     //Drive to be be aligned with coin slot on the side
-    driveForInches(SKID_FIRST, 10.5, DRIVE_POWER);
+    driveForInches(SKID_FIRST, InchesToCoin, DRIVE_POWER);
+
+    // Check that the robot made it to the coin slot
+    check_x_plus(19.0);
 
     //Turn to align arm
     turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn*2, TURN_POWER);
@@ -1010,7 +1051,11 @@ void performanceTestThree() {
     //Check turn with RPS
     check_heading(90);
 
-    //TODO: TURN SERVO ARM TO DROP COIN :)
+    //Drive to be be aligned with coin slot on the side
+    driveForInches(WHEELS_FIRST, InchesToCoinSlot, DRIVE_POWER);
+
+    // Turns the servos to drop the coin
+    dropCoin();
 }
 
 /*
@@ -1020,13 +1065,10 @@ void performanceTestThree() {
 int main(void)
 {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
-    calibrateServo();
-
-    performanceTestThree();
+    calibrateServos();
 
     // Call desired function
-    //printRPSLocation();
-
+    performanceTestThree();
 
     // Just a conventional best practice
     return 0;
