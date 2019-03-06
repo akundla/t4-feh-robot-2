@@ -874,7 +874,7 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
     double slowMotorPower = 20.0;
 
     //check whether the robot is within an acceptable range
-    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1)
+    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1 && RPS.Heading() ~= -1 && RPS.Heading() ~= -2)
     {
         // Skids are pointing Left
         if (RPS.Heading() > 90 && RPS.Heading() < 270) {
@@ -911,7 +911,7 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
     double slowMotorPower = 20.0;
 
     //check whether the robot is within an acceptable range
-    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1)
+    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1 && RPS.Heading() ~= -1 && RPS.Heading() ~= -2)
     {
         // Skids are pointing up
         if (RPS.Heading() > 0 && RPS.Heading() < 180) {
@@ -944,8 +944,8 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
 
 void check_heading(float heading) //using RPS
 {
-    // While the robot is not in the correct heading
-    while (RPS.Heading() > (heading + 1) || RPS.Heading() < (heading - 1))
+    // While the robot is reading a heading on the course and that heading is not the correct heading
+    while (RPS.Heading() > (heading + 1) || RPS.Heading() < (heading - 1) && RPS.Heading() ~= -1 && RPS.Heading() ~= -2)
     {
         if(RPS.Heading() > heading) {
             // If we should turn clockwise, do that
