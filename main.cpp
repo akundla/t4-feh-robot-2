@@ -969,6 +969,50 @@ void check_heading(float heading) //using RPS
     }
 }
 
+void performanceTestThree() {
+
+    //Number of counts for 45 degree turn at beginning
+    #define InitialTurn 11
+
+    //Prepare servo for 180 degree rotation
+    servo.SetDegree(180);
+
+    //Choose which course for RPS
+    RPS.InitializeTouchMenu();
+
+    //Wait for light
+    waitForStartLight();
+
+    //Turns robot counterclockwise 45 degrees to alight with steep ramp
+    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn, TURN_POWER);
+
+    //verify robot is facing in the positive y direction
+    check_heading(90);
+
+    //Drive robot to top of ramp
+    driveForInches(SKID_FIRST, 32.5, DRIVE_POWER);
+
+    //Verify Position with RPS
+    check_y_plus(44.3);
+
+    //Turn 90 degrees clockwise
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2, TURN_POWER);
+
+    //Check turn with RPS
+    check_heading(0);
+
+    //Drive to be be aligned with coin slot on the side
+    driveForInches(SKID_FIRST, 10.5, DRIVE_POWER);
+
+    //Turn to align arm
+    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn*2, TURN_POWER);
+
+    //Check turn with RPS
+    check_heading(90);
+
+    //TODO: TURN SERVO ARM TO DROP COIN :)
+}
+
 /*
  * Main function: Calls whatever other function the robot is to run.
  */
@@ -976,10 +1020,12 @@ void check_heading(float heading) //using RPS
 int main(void)
 {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
-    //calibrateServo();
+    calibrateServo();
+
+    performanceTestThree();
 
     // Call desired function
-    printRPSLocation();
+    //printRPSLocation();
 
 
     // Just a conventional best practice
