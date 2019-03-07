@@ -989,12 +989,17 @@ void check_heading(float heading) //using RPS
 
 // Rotates the servo arm to drop the coin into the slot
 void dropCoin() {
-    #define DEGREE_STRAIGHT_OUT 120
-    #define DEGREE_VERTICAL_DOWN 90
-    #define SECONDS_TO_WAIT 0.5
+    #define DEGREE_STRAIGHT_OUT 175
+    #define DEGREE_VERTICAL_DOWN 60
+    #define SECONDS_TO_WAIT 1.5
 
     // Rotates lower servo to put the arm in position
     lower_servo.SetDegree(DEGREE_STRAIGHT_OUT);
+
+    Sleep(SECONDS_TO_WAIT);
+
+    // Rotates lower servo to put the arm in position
+    lower_servo.SetDegree(DEGREE_STRAIGHT_OUT - 120);
 
     Sleep(SECONDS_TO_WAIT);
 
@@ -1010,8 +1015,16 @@ void performanceTestThree() {
     #define InchesToCoin 5.8
     #define InchesToCoinSlot 2
 
-    //Prepare servo for 180 degree rotation
-    lower_servo.SetDegree(180);
+    // Set arm servos to initial position
+    lower_servo.SetDegree(15);
+    upper_servo.SetDegree(140);
+
+    float x, y;
+    LCD.WriteLine("Performance test 3 servo testing");
+    LCD.WriteLine("Set the arm to the correct position you robot champion!");
+    LCD.WriteLine("Then touch the screen to continue");
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
 
     //Choose which course for RPS
     RPS.InitializeTouchMenu();
@@ -1023,11 +1036,12 @@ void performanceTestThree() {
     turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn, TURN_POWER);
 
     //verify robot is facing in the positive y direction
-    // check_heading(90);
+    check_heading(90);
 
     //Drive robot to top of ramp
-    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER);
+    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER * 1.20);
 
+    // Align 90 degrees
     check_heading(90);
 
     //Verify Position with RPS
