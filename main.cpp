@@ -21,7 +21,7 @@
 // Standard percentage of motor power for turning the robot in place
 #define TURN_POWER 20.0
 // Standard percentage for motor checking
-#define RPS_POWER 10.0
+#define RPS_POWER 12.0
 
 // SENSORS
 //Declare a CdS Cell sensor as an analog input and assign it to an IO port
@@ -36,6 +36,17 @@ DigitalEncoder right_encoder(FEHIO::P1_0);
 #define WHEEL_CIRCUMFERENCE 9.62112750162
 #define INCHES_PER_TICK 0.20044
 #define TICKS_PER_INCH 4.989025692
+
+// Used for checking heading
+#define SKIDS_COURSE_RIGHT 0
+#define SKIDS_COURSE_TOP 90
+#define SKIDS_COURSE_LEFT 180
+#define SKIDS_COURSE_BOTTOM 270
+
+#define WHEELS_COURSE_RIGHT 180
+#define WHEELS_COURSE_TOP 270
+#define WHEELS_COURSE_LEFT 0
+#define WHEELS_COURSE_BOTTOM 90
 
 //MOTORS
 //Assign the right and left motors to motor ports with a max voltage of 9.0V
@@ -953,6 +964,21 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
     }
 }
 
+
+bool RPSIsWorking () {
+
+    if (RPS.Heading() != -1 && RPS.Heading() != -2) {
+        return true;
+    } else if (RPS.Heading() == -1) {
+        LCD.WriteLine("RPS RETURNED -1");
+        return false;
+    } else {
+        LCD.WriteLine("RPS RETURNED -2");
+        return false;
+    }
+
+}
+
 void check_heading(float heading) //using RPS
 {
     #define DEGREE_TOLERANCE 4
@@ -962,7 +988,7 @@ void check_heading(float heading) //using RPS
     float timeout = TimeNow();
 
     // While the robot is reading a heading on the course and that heading is not the correct heading
-    while (RPS.Heading() > (heading + DEGREE_TOLERANCE) || RPS.Heading() < (heading - DEGREE_TOLERANCE) && RPS.Heading() != -1 && RPS.Heading() != -2 && (TimeNow() - timeout) < SECONDS_TIMEOUT)
+    while (RPS.Heading() > (heading + DEGREE_TOLERANCE) || RPS.Heading() < (heading - DEGREE_TOLERANCE) && RPSIsWorking() && (TimeNow() - timeout) < SECONDS_TIMEOUT)
     {
         if(RPS.Heading() > heading) {
             // If we should turn clockwise, do that
@@ -989,7 +1015,7 @@ void check_heading(float heading) //using RPS
 
 // Rotates the servo arm to drop the coin into the slot
 void dropCoin() {
-    #define DEGREE_STRAIGHT_OUT 175
+    #define DEGREE_STRAIGHT_OUT 170
     #define DEGREE_VERTICAL_DOWN 60
     #define SECONDS_TO_WAIT 1.5
 
@@ -998,13 +1024,15 @@ void dropCoin() {
 
     Sleep(SECONDS_TO_WAIT);
 
+    // Rotates upper servo to drop coin
+    upper_servo.SetDegree(DEGREE_VERTICAL_DOWN);
+
+    Sleep(SECONDS_TO_WAIT);
+
     // Rotates lower servo to put the arm in position
     lower_servo.SetDegree(DEGREE_STRAIGHT_OUT - 120);
 
     Sleep(SECONDS_TO_WAIT);
-
-    // Rotates upper servo to drop coin
-    upper_servo.SetDegree(DEGREE_VERTICAL_DOWN);
 }
 
 void performanceTestThree() {
@@ -1012,7 +1040,7 @@ void performanceTestThree() {
     //Number of counts for 45 degree turn at beginning
     #define InitialTurn 11
     #define InchesUpRamp 31.5
-    #define InchesToCoin 5.8
+    #define InchesToCoin 6.0
     #define InchesToCoinSlot 2
 
     // Set arm servos to initial position
@@ -1036,22 +1064,22 @@ void performanceTestThree() {
     turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn, TURN_POWER);
 
     //verify robot is facing in the positive y direction
-    check_heading(90);
+    check_heading(SKIDS_COURSE_TOP);
 
     //Drive robot to top of ramp
-    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER * 1.20);
+    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER * 1.30);
 
     // Align 90 degrees
-    check_heading(90);
+    check_heading(SKIDS_COURSE_TOP);
 
     //Verify Position with RPS
-    check_y_plus(45.3);
+    check_y_plus(46.0);
 
     //Turn 90 degrees clockwise
-    turnCountsInPlace(CLOCKWISE, InitialTurn*2, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
 
     //Check turn with RPS
-    check_heading(0);
+    check_heading(SKIDS_COURSE_RIGHT);
 
     //Drive to be be aligned with coin slot on the side
     driveForInches(SKID_FIRST, InchesToCoin, DRIVE_POWER);
@@ -1060,16 +1088,46 @@ void performanceTestThree() {
     check_x_plus(19.0);
 
     //Turn to align arm
-    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn*2, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn*1.7, TURN_POWER);
 
     //Check turn with RPS
-    check_heading(90);
+    check_heading(SKIDS_COURSE_TOP);
 
     //Drive to be be aligned with coin slot on the side
     driveForInches(WHEELS_FIRST, InchesToCoinSlot, DRIVE_POWER);
 
     // Turns the servos to drop the coin
     dropCoin();
+
+    // Back away from the slot
+    driveForInches(SKID_FIRST, 2.0 * InchesToCoinSlot, DRIVE_POWER);
+
+    // Turn clockwise to drive wheels-first back to the top of the ramp
+    turnCountsInPlace(CLOCKWISE, InitialTurn*1.7, TURN_POWER);
+
+    // Check that the wheels face the left wall
+    check_heading(WHEELS_COURSE_LEFT);
+
+    //Drive to be be aligned with the lever horizontally
+    driveForInches(WHEELS_FIRST, InchesToCoin, DRIVE_POWER);
+
+    // Turn to face the lever
+    turnCountsInPlace(CLOCKWISE, InitialTurn*1.7, TURN_POWER);
+
+    // Check that the wheels face the lever
+    check_heading(WHEELS_COURSE_TOP);
+
+    // Prepare arm to hit lever
+    lower_servo.SetDegree(175);
+    upper_servo.SetDegree(40);
+
+    Sleep(0.4);
+
+    //Drive to be be aligned with the lever
+    driveForInches(WHEELS_FIRST, 12, DRIVE_POWER);
+
+    // Whack that lever
+    lower_servo.SetDegree(90);
 }
 
 /*
