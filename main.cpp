@@ -1127,7 +1127,7 @@ void performanceTestThree() {
     driveForInches(WHEELS_FIRST, 9.5, DRIVE_POWER);
 
     //Turn counter-clockwise to angle arm better relative to lever
-    turnCountsInPlace(COUNTER_CLOCKWISE, 6, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, 4, TURN_POWER);
 
     //Drive toward lever
     driveForInches(WHEELS_FIRST, 3.35, DRIVE_POWER);
