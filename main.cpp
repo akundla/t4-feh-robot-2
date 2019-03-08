@@ -1015,7 +1015,7 @@ void check_heading(float heading) //using RPS
 
 // Rotates the servo arm to drop the coin into the slot
 void dropCoin() {
-    #define DEGREE_STRAIGHT_OUT 170
+    #define DEGREE_STRAIGHT_OUT 165
     #define DEGREE_VERTICAL_DOWN 60
     #define SECONDS_TO_WAIT 1.5
 
@@ -1103,7 +1103,7 @@ void performanceTestThree() {
     driveForInches(SKID_FIRST, 2.0 * InchesToCoinSlot, DRIVE_POWER);
 
     // Turn clockwise to drive wheels-first back to the top of the ramp
-    turnCountsInPlace(CLOCKWISE, InitialTurn*1.7, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
 
     // Check that the wheels face the left wall
     check_heading(WHEELS_COURSE_LEFT);
@@ -1112,22 +1112,28 @@ void performanceTestThree() {
     driveForInches(WHEELS_FIRST, InchesToCoin, DRIVE_POWER);
 
     // Turn to face the lever
-    turnCountsInPlace(CLOCKWISE, InitialTurn*1.7, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
 
     // Check that the wheels face the lever
     check_heading(WHEELS_COURSE_TOP);
 
     // Prepare arm to hit lever
     lower_servo.SetDegree(175);
-    upper_servo.SetDegree(40);
+    upper_servo.SetDegree(60);
 
     Sleep(0.4);
 
     //Drive to be be aligned with the lever
-    driveForInches(WHEELS_FIRST, 12, DRIVE_POWER);
+    driveForInches(WHEELS_FIRST, 9.5, DRIVE_POWER);
+
+    //Turn counter-clockwise to angle arm better relative to lever
+    turnCountsInPlace(COUNTER_CLOCKWISE, 6, TURN_POWER);
+
+    //Drive toward lever
+    driveForInches(WHEELS_FIRST, 3.35, DRIVE_POWER);
 
     // Whack that lever
-    lower_servo.SetDegree(90);
+    lower_servo.SetDegree(20);
 }
 
 /*
