@@ -9,6 +9,8 @@ exploration-two.cpp
 exploration-two.h
 line-follower-functions.h
 line-following-functions.cpp
+performance-test-four.cpp
+performance-test-four.h
 performance-test-one.cpp
 performance-test-one.h
 performance-test-three.cpp

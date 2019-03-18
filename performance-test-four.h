@@ -1,0 +1,6 @@
+#ifndef PERFORMANCETESTFOUR_H
+#define PERFORMANCETESTFOUR_H
+
+void performanceTestFour();
+
+#endif // PERFORMANCETESTFOUR_H

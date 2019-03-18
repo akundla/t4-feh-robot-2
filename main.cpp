@@ -15,6 +15,7 @@
 #include "performance-test-one.h"
 #include "performance-test-two.h"
 #include "performance-test-three.h"
+#include "performance-test-four.h"
 
 // SENSORS
 //Declare a CdS Cell sensor as an analog input and assign it to an IO port
@@ -64,7 +65,7 @@ int main(void) {
     calibrateServos();
 
     // Call desired function
-    performanceTestThree();
+    performanceTestFour();
 
     // Just a conventional best practice
     return 0;
