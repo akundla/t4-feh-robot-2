@@ -13,8 +13,17 @@ void performanceTestFour() {
     // Distance to drive to red button
     const double inchesToDriveToButton = 7.5;
 
-    // Print test information to screen
+    //Clear the screen
     LCD.Clear();
+
+    //Print the RPS course selection menu
+    RPS.InitializeTouchMenu();
+
+
+    //Clear the screen
+    LCD.Clear();
+
+    //Print testing information
     LCD.WriteLine("Performance test 4");
     LCD.WriteLine("Waiting for start light...");
 
@@ -104,10 +113,10 @@ void performanceTestFour() {
         driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
     }
 
-    const double inchesUpAcrylicRamp = 30;
+    const double inchesUpAcrylicRamp = 35;
     const double ticksIn90DegreeTurn = 22;
     const double inchesToLineUpWithCounters = 2;
-    const double inchesToCounters = 12;
+    const double inchesToCounters = 5;
     const float degreeToHitCountersWall = 50;
     const double countersDistance = 15;
     const float degreePastVertical = 0;
@@ -122,11 +131,17 @@ void performanceTestFour() {
     const double yTopOfSteepRamp = 45;
 
     // TODO: Find point at top of acrylic ramp for adjustment
-    const double xPosition = 30;
+    const double xPosition = 25;
     const double yPosition = 45;
 
+    //Check heading before going up ramp, account for left-drifting tendency
+    check_heading(85);
+
     // Drive up the acrylic ramp
-    driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER);
+    driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER+15);
+
+    //Check angle
+    check_heading(85);
 
     // Turn 90 degrees so the skids point left
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
@@ -136,7 +151,7 @@ void performanceTestFour() {
     driveForInches(SKID_FIRST, inchesToLineUpWithCounters, DRIVE_POWER);
     check_x_plus(xPosition);
 
-    // Turn 90 degrees to the wheels and arm face the counters
+    // Turn 90 degrees so the wheels and arm face the counters
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
     check_heading(WHEELS_COURSE_TOP);
     check_y_plus(yPosition);
