@@ -95,6 +95,9 @@ AnalogInputPin rightOptosensor (FEHIO::P2_0);
 #define UPPER_SERVO_MIN 670
 #define UPPER_SERVO_MAX 2370
 
+#define LOWER_DEGREE_STRAIGHT_OUT 165
+#define UPPER_DEGREE_VERTICAL_DOWN 60
+
 // Constants from exploration 1
 // Left optosensor
 #define LEFT_RED 1.250
@@ -116,6 +119,11 @@ AnalogInputPin rightOptosensor (FEHIO::P2_0);
 
 // This margin is wider than necessary for easy detection on clear-contrast backgrounds
 #define MoE 0.500
+
+// The number of seconds the robot will attempt to calibrate for using RPS before giving up
+#define SECONDS_TIMEOUT 8.0
+// The number of degrees the robot can be off by on either side and still proceed forward
+#define DEGREE_TOLERANCE 4
 
 
 // CALIBRATION FUNCTIONS
@@ -455,7 +463,7 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
     right_encoder.ResetCounts();
     left_encoder.ResetCounts();
 
-    #define SECONDS_TIMEOUT 8.0
+
 
     LCD.WriteLine("Driving for ");
     LCD.Write(inches);
@@ -981,9 +989,6 @@ bool RPSIsWorking () {
 
 void check_heading(float heading) //using RPS
 {
-    #define DEGREE_TOLERANCE 4
-    #define SECONDS_TIMEOUT 10
-
     // The current timeout
     float timeout = TimeNow();
 
@@ -1015,22 +1020,20 @@ void check_heading(float heading) //using RPS
 
 // Rotates the servo arm to drop the coin into the slot
 void dropCoin() {
-    #define DEGREE_STRAIGHT_OUT 165
-    #define DEGREE_VERTICAL_DOWN 60
-    #define SECONDS_TO_WAIT 1.5
+    const double SECONDS_TO_WAIT = 1.5;
 
     // Rotates lower servo to put the arm in position
-    lower_servo.SetDegree(DEGREE_STRAIGHT_OUT);
+    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
 
     Sleep(SECONDS_TO_WAIT);
 
     // Rotates upper servo to drop coin
-    upper_servo.SetDegree(DEGREE_VERTICAL_DOWN);
+    upper_servo.SetDegree(UPPER_DEGREE_VERTICAL_DOWN);
 
     Sleep(SECONDS_TO_WAIT);
 
     // Rotates lower servo to put the arm in position
-    lower_servo.SetDegree(DEGREE_STRAIGHT_OUT - 120);
+    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT - 120);
 
     Sleep(SECONDS_TO_WAIT);
 }
@@ -1038,10 +1041,10 @@ void dropCoin() {
 void performanceTestThree() {
 
     //Number of counts for 45 degree turn at beginning
-    #define InitialTurn 11
-    #define InchesUpRamp 31.5
-    #define InchesToCoin 6.0
-    #define InchesToCoinSlot 2
+    const double InitialTurn = 11;
+    const double InchesUpRamp = 31.5;
+    const double InchesToCoin = 6.0;
+    const double InchesToCoinSlot = 2;
 
     // Set arm servos to initial position
     lower_servo.SetDegree(15);
