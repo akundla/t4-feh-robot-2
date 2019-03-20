@@ -57,6 +57,21 @@ void calibrateServos() {
     upper_servo.SetMax(UPPER_SERVO_MAX);
 }
 
+// Waits for the user to touch the screen
+void waitForTouch() {
+    float x, y;
+    LCD.WriteLine("Waiting for touch: Press and release the screen to continue");
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
+}
+
+// Sets the servos to the correct initial position
+void setupServos() {
+    // Set arm servos to initial position
+    lower_servo.SetDegree(15);
+    upper_servo.SetDegree(140);
+}
+
 /*
  * Main function: Calls whatever other function the robot is to run.
  */
