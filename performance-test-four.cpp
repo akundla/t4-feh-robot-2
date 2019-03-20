@@ -19,9 +19,19 @@ void performanceTestFour() {
     //Clear the screen
     LCD.Clear();
 
+    // Set arm servos to initial position
+    lower_servo.SetDegree(15);
+    upper_servo.SetDegree(140);
+
+    float x, y;
+    LCD.WriteLine("Performance test 3 servo testing");
+    LCD.WriteLine("Set the arm to the correct position you robot champion!");
+    LCD.WriteLine("Then touch the screen to continue");
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
+
     //Print the RPS course selection menu
     RPS.InitializeTouchMenu();
-
 
     //Clear the screen
     LCD.Clear();
@@ -119,9 +129,9 @@ void performanceTestFour() {
     const double inchesUpAcrylicRamp = 34;
     const double ticksIn90DegreeTurn = 22;
     const double inchesToLineUpWithCounters = 1.5;
-    const double inchesToCounters = 15;
+    const double inchesToCounters = 9.5;
     const float degreeToHitCountersWall = 50;
-    const double countersDistance = 15;
+    const double countersDistance = 9;
     const float degreePastVertical = 0;
     const float degreeBack = 25;
     const double inchesToLever = 10;
@@ -138,7 +148,7 @@ void performanceTestFour() {
     const double yPosition = 53.5;
 
     //Check heading before going up ramp, account for left-drifting tendency
-    check_heading(85);
+    check_heading(80);
 
     // Drive up the acrylic ramp
     driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER+15);
@@ -162,11 +172,19 @@ void performanceTestFour() {
     // Stick the lever straight out so it doesn't hit the frame of the foosball counters
     lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
 
-    // Drive to lever
+    // Drive to counters
     driveForInches(WHEELS_FIRST, inchesToCounters, DRIVE_POWER);
 
     // Rotate to be parallel to counters
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+
+    //Drive in +x direction so arm is over foosball
+    //TODO: Make this a constant
+    //TODO: move lower sero back
+    driveForInches(SKID_FIRST, 1.0, TURN_POWER);
+
+    // Wait after turning
+    Sleep(1.0);
 
     // Rotate arm to hit counters back wall
     lower_servo.SetDegree(degreeToHitCountersWall);

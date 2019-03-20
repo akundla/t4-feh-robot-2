@@ -14,7 +14,7 @@
 
 // MOTOR CONSTANTS
 // Power offset added to the left motor to make the robot drive straight
-#define LEFT_MOTOR_OFFSET 3.0
+#define LEFT_MOTOR_OFFSET 1.0
 // Standard percentage of motor power for driving forwards or backwards
 #define DRIVE_POWER 40.0
 // Standard percentage of motor power for turning the robot in place
@@ -24,8 +24,8 @@
 
 // SERVOS
 // Calibration values for lower servo
-#define LOWER_SERVO_MIN 769
-#define LOWER_SERVO_MAX 2490
+#define LOWER_SERVO_MIN 769  //original value was 769
+#define LOWER_SERVO_MAX 2480  //orignal value was 2480
 
 // Calibration values for upper servo
 #define UPPER_SERVO_MIN 670
