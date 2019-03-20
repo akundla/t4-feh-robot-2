@@ -63,6 +63,7 @@ void calibrateServos() {
 int main(void) {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
     calibrateServos();
+    float x,y;
 
     // Call desired function
     performanceTestFour();
