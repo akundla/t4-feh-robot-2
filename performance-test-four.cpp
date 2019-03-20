@@ -6,10 +6,13 @@
 
 void performanceTestFour() {
 
+    // Flag to make it go to blue
+    bool forceBlue = true;
+
     // Calibration Values
-    const double inchesToDriveOnStart = 3.40;
+    const double inchesToDriveOnStart = 3.60;
     // 11 counts makes a 45 degree turn.
-    const int countsToTurn = 11;
+    const int countsToTurn = 10;
     // Distance to drive to red button
     const double inchesToDriveToButton = 7.5;
 
@@ -54,7 +57,7 @@ void performanceTestFour() {
 
     // Detects red light
     bool IS_RED = false;
-    if (cdsCell.Value() < RED_LIGHT_RED_F_V_AVG + MoE && cdsCell.Value() > RED_LIGHT_RED_F_V_AVG - MoE)
+    if (!forceBlue && cdsCell.Value() < RED_LIGHT_RED_F_V_AVG + MoE && cdsCell.Value() > RED_LIGHT_RED_F_V_AVG - MoE)
     {
         IS_RED = true;
         LCD.Clear();
@@ -87,7 +90,7 @@ void performanceTestFour() {
         turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
 
         //Drive to second light
-        driveForInches(SKID_FIRST, 3.75, DRIVE_POWER / 2.0);
+        driveForInches(SKID_FIRST, 3.9, DRIVE_POWER / 2.0);
 
         //Turn to face acrylic ramp
         turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
@@ -113,10 +116,10 @@ void performanceTestFour() {
         driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
     }
 
-    const double inchesUpAcrylicRamp = 35;
+    const double inchesUpAcrylicRamp = 34;
     const double ticksIn90DegreeTurn = 22;
-    const double inchesToLineUpWithCounters = 2;
-    const double inchesToCounters = 5;
+    const double inchesToLineUpWithCounters = 1.5;
+    const double inchesToCounters = 15;
     const float degreeToHitCountersWall = 50;
     const double countersDistance = 15;
     const float degreePastVertical = 0;
@@ -131,8 +134,8 @@ void performanceTestFour() {
     const double yTopOfSteepRamp = 45;
 
     // TODO: Find point at top of acrylic ramp for adjustment
-    const double xPosition = 25;
-    const double yPosition = 45;
+    const double xPosition = 30;
+    const double yPosition = 53.5;
 
     //Check heading before going up ramp, account for left-drifting tendency
     check_heading(85);
@@ -142,19 +145,19 @@ void performanceTestFour() {
 
     //Check angle
     check_heading(85);
+    check_y_plus(yPosition);
+
+    // Drive forward enough to turn
+    driveForInches(SKID_FIRST, 3.0, DRIVE_POWER);
 
     // Turn 90 degrees so the skids point left
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
     // Check and correct positioning and drive to line up with counters
-    check_heading(SKIDS_COURSE_LEFT);
     driveForInches(SKID_FIRST, inchesToLineUpWithCounters, DRIVE_POWER);
-    check_x_plus(xPosition);
 
     // Turn 90 degrees so the wheels and arm face the counters
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
-    check_heading(WHEELS_COURSE_TOP);
-    check_y_plus(yPosition);
 
     // Stick the lever straight out so it doesn't hit the frame of the foosball counters
     lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
