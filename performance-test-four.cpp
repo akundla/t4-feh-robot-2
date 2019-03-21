@@ -108,7 +108,7 @@ void performanceTestFour() {
     // Otherwise the light is blue
     else {
         // TODO: Calibrate, it's definitely more than 5
-        const double inchesToBlueButton = 9.0;
+        const double inchesToBlueButton = 8.0;
 
         // Drives the robot up to be level with the second button
         driveForInches(SKID_FIRST, inchesToBlueButton, DRIVE_POWER / 2.0);
@@ -117,7 +117,7 @@ void performanceTestFour() {
         turnCountsInPlace(COUNTER_CLOCKWISE, 24, TURN_POWER);
 
         // Drives the robot into the button
-        driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
+        driveForSeconds(WHEELS_FIRST, 2.0, (DRIVE_POWER / 3) + 10);
 
         // Hold down the button
         Sleep(5.0);
@@ -130,8 +130,8 @@ void performanceTestFour() {
     const double ticksIn90DegreeTurn = 22;
     const double inchesToLineUpWithCounters = 1.5;
     const double inchesToCounters = 9.5;
-    const float degreeToHitCountersWall = 50;
-    const double countersDistance = 9;
+    const float degreeToHitCountersWall = 20;
+    const double countersDistance = 2.5;
     const float degreePastVertical = 0;
     const float degreeBack = 25;
     const double inchesToLever = 10;
@@ -170,7 +170,7 @@ void performanceTestFour() {
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
     // Stick the lever straight out so it doesn't hit the frame of the foosball counters
-    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
+    lower_servo.SetDegree(180);
 
     // Drive to counters
     driveForInches(WHEELS_FIRST, inchesToCounters, DRIVE_POWER);
@@ -180,23 +180,32 @@ void performanceTestFour() {
 
     //Drive in +x direction so arm is over foosball
     //TODO: Make this a constant
-    //TODO: move lower sero back
-    driveForInches(SKID_FIRST, 1.0, TURN_POWER);
+    //TODO: move lower servo back
+    driveForInches(SKID_FIRST, 1.25, TURN_POWER);
 
     // Wait after turning
     Sleep(1.0);
 
     // Rotate arm to hit counters back wall
     lower_servo.SetDegree(degreeToHitCountersWall);
+
+    // Wait after turning
+    Sleep(1.0);
+
     // Rotate arm on its axis to hit counters
     upper_servo.SetDegree(UPPER_DEGREE_VERTICAL_DOWN);
+
+    // Wait after turning
+    Sleep(1.0);
 
     // Drive forward dragging the counters along
     driveForInches(WHEELS_FIRST, countersDistance, DRIVE_POWER / 2.0);
 
     // Rotate arm on its axis to no longer touch counters
-    upper_servo.SetDegree(degreePastVertical);
-    lower_servo.SetDegree(degreeBack);
+    upper_servo.SetDegree(0);
+
+    // TODO: Make constant
+    lower_servo.SetDegree(180);
 
     // Drives over to lever
     driveForInches(WHEELS_FIRST, inchesToLever, DRIVE_POWER);

@@ -79,7 +79,7 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
 
         double rightMotorPowerAdjustment = (leftTicksDiff / TICKS_PER_REV) * rightMotorPowerPercent;
 
-        rightMotor.SetPercent(rightMotorPowerPercent);
+        rightMotor.SetPercent(rightMotorPowerPercent + rightMotorPowerAdjustment);
     }
 
     //Turn off motors
