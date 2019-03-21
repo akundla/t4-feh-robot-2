@@ -49,12 +49,12 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
 
     // Drives skids first
     if (skidFirst) {
-        leftMotorPowerPercent = motorPowerPercent + LEFT_MOTOR_OFFSET;
+        leftMotorPowerPercent = motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET);
         rightMotorPowerPercent = -motorPowerPercent;
     }
     // Drives wheels first
     else {
-        leftMotorPowerPercent = -(motorPowerPercent + LEFT_MOTOR_OFFSET);
+        leftMotorPowerPercent = -(motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET));
         rightMotorPowerPercent = motorPowerPercent;
     }
 
@@ -113,12 +113,12 @@ void turnCountsInPlace(bool turnClockwise, int counts, int motorPowerPercent) {
 
     // Turns clockwise
     if (turnClockwise) {
-        leftMotorPowerPercent = -(motorPowerPercent + LEFT_MOTOR_OFFSET);
+        leftMotorPowerPercent = -(motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET));
         rightMotorPowerPercent = -motorPowerPercent;
     }
     // Turns counterclockwise
     else {
-        leftMotorPowerPercent = motorPowerPercent + LEFT_MOTOR_OFFSET;
+        leftMotorPowerPercent = motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET);
         rightMotorPowerPercent = motorPowerPercent;
     }
 

@@ -6,16 +6,29 @@ void DriveSkidFirstUntilHitWall(int motorPowerPercent)
     //Turn both motors on at given percent motor power.
     // Left and Right motor must be driven at different percentages
     // Robot will drive skids first
-    leftMotor.SetPercent(motorPowerPercent + LEFT_MOTOR_OFFSET);
+    leftMotor.SetPercent(motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET));
     rightMotor.SetPercent(-motorPowerPercent);
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed
-    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) { }
+    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) {
+        LCD.WriteLine("BUMP SWITCHES NOT PRESSED");
+
+        if (skidServoCornerBump.Value() == 0)  {
+            rightMotor.Stop();
+        }
+
+        if (skidNonServoCornerBump.Value() == 0)  {
+            leftMotor.Stop();
+        }
+    }
+
+
 
     // Stops motors
     leftMotor.Stop();
     rightMotor.Stop();
+
 }
 
 // TODO: fix to account for new bump switch configuration
@@ -28,7 +41,7 @@ void BackLeftTurnUntilHitWall()
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed
-    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) { }
+    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) {}
 
     // Stops motors
     leftMotor.Stop();

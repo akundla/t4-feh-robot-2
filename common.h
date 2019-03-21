@@ -13,8 +13,8 @@
 // DECLARE GLOBAL CONSTANTS
 
 // MOTOR CONSTANTS
-// Power offset added to the left motor to make the robot drive straight
-#define LEFT_MOTOR_OFFSET 1.0
+// Power offset multiplied by the motor power and added to the left motor power to make the robot drive straight
+#define LEFT_MOTOR_OFFSET 0.025
 // Standard percentage of motor power for driving forwards or backwards
 #define DRIVE_POWER 40.0
 // Standard percentage of motor power for turning the robot in place

@@ -35,7 +35,7 @@ FEHMotor rightMotor (FEHMotor :: Motor1, 9.0);
 FEHServo lower_servo (FEHServo::Servo7);
 FEHServo upper_servo (FEHServo::Servo0);
 
-// BUMP SWITCHES (Not present)
+// BUMP SWITCHES
 DigitalInputPin skidServoCornerBump (FEHIO::P3_7);
 DigitalInputPin skidNonServoCornerBump (FEHIO::P3_0);
 
@@ -71,7 +71,6 @@ void setupServos() {
 int main(void) {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
     calibrateServos();
-    float x,y;
 
     // Call desired function
     performanceTestFour();
