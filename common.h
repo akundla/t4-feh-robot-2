@@ -125,13 +125,7 @@ extern FEHMotor rightMotor;
 extern FEHServo lower_servo;
 extern FEHServo upper_servo;
 
-extern DigitalInputPin frontLeftBump;
-extern DigitalInputPin frontRightBump;
-extern DigitalInputPin backLeftBump;
-extern DigitalInputPin backRightBump;
-
-extern AnalogInputPin leftOptosensor;
-extern AnalogInputPin middleOptosensor;
-extern AnalogInputPin rightOptosensor;
+extern DigitalInputPin skidServoCornerBump;
+extern DigitalInputPin skidNonServoCornerBump;
 
 #endif // COMMON_H

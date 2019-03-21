@@ -11,14 +11,14 @@ void DriveSkidFirstUntilHitWall(int motorPowerPercent)
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed
-    while (frontLeftBump.Value() == 1 || frontRightBump.Value() == 1) { }
+    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) { }
 
     // Stops motors
     leftMotor.Stop();
     rightMotor.Stop();
 }
 
-// TODO: Fine-tune for each motor setup
+// TODO: fix to account for new bump switch configuration
 // Function to reverse the robot to the left until a wall is hit
 void BackLeftTurnUntilHitWall()
 {
@@ -28,14 +28,14 @@ void BackLeftTurnUntilHitWall()
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed
-    while (backLeftBump.Value() == 1 || backRightBump.Value() == 1) { }
+    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) { }
 
     // Stops motors
     leftMotor.Stop();
     rightMotor.Stop();
 }
 
-// TODO: Fine-tune for each motor setup
+// TODO: fix to account for new bump switch configuration
 // Function to reverse the robot back to the right until one switch hits a wall
 void BackRightTurnUntilCornerHitWall()
 {
@@ -45,7 +45,7 @@ void BackRightTurnUntilCornerHitWall()
 
     // Psuedo-infinite loop to burn time while one switch is not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed
-    while (backLeftBump.Value() == 1 && backRightBump.Value() == 1) { }
+    while (skidServoCornerBump.Value() == 1 && skidNonServoCornerBump.Value() == 1) { }
 
     // Stops left motor
     leftMotor.Stop();

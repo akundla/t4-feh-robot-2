@@ -3,8 +3,8 @@
 
 void DriveSkidFirstUntilHitWall(int motorPowerPercent);
 
-void BackLeftTurnUntilHitWall();
-
-void BackRightTurnUntilCornerHitWall();
+// TODO: fix to account for new bump switch configuration
+// void BackLeftTurnUntilHitWall();
+// void BackRightTurnUntilCornerHitWall();
 
 #endif // BUMPSWITCHFUNCTIONS_H

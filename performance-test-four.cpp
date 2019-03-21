@@ -179,9 +179,14 @@ void performanceTestFour() {
     // Rotate to be parallel to counters
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
-    //Drive in +x direction so arm is over foosball
-    //TODO: Make this a constant
+    //Drive in +x direction to line up with wall
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
+
+    // Wait after driving
+    Sleep(1.0);
+
+    // Drive to line up with counters
+    driveForInches(WHEELS_FIRST, 2.5, DRIVE_POWER/2);
 
     // Wait after turning
     Sleep(1.0);

@@ -7,8 +7,9 @@ void navigateExploration1Course() {
     int QUARTER_POWER_PERCENT = 25;
 
     DriveSkidFirstUntilHitWall(QUARTER_POWER_PERCENT);
-    BackLeftTurnUntilHitWall();
+    // TODO: These are commented out because the functions dont work with the final bump switch configuration.
+    //BackLeftTurnUntilHitWall();
     DriveSkidFirstUntilHitWall(QUARTER_POWER_PERCENT);
-    BackRightTurnUntilCornerHitWall();
+    //BackRightTurnUntilCornerHitWall();
     DriveSkidFirstUntilHitWall(QUARTER_POWER_PERCENT);
 }

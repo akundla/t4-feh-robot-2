@@ -36,15 +36,8 @@ FEHServo lower_servo (FEHServo::Servo7);
 FEHServo upper_servo (FEHServo::Servo0);
 
 // BUMP SWITCHES (Not present)
-DigitalInputPin frontLeftBump (FEHIO::P3_6);
-DigitalInputPin frontRightBump (FEHIO::P3_1);
-DigitalInputPin backLeftBump (FEHIO::P3_7);
-DigitalInputPin backRightBump (FEHIO::P3_0);
-
-// OPTOSENSORS (Not present)
-AnalogInputPin leftOptosensor (FEHIO::P2_2);
-AnalogInputPin middleOptosensor (FEHIO::P2_1);
-AnalogInputPin rightOptosensor (FEHIO::P2_0);
+DigitalInputPin skidServoCornerBump (FEHIO::P3_7);
+DigitalInputPin skidNonServoCornerBump (FEHIO::P3_0);
 
 // Calibrates the servos
 void calibrateServos() {
