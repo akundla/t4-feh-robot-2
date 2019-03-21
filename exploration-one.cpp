@@ -6,9 +6,9 @@ void navigateExploration1Course() {
 
     int QUARTER_POWER_PERCENT = 25;
 
-    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT);
+    DriveSkidFirstUntilHitWall(QUARTER_POWER_PERCENT);
     BackLeftTurnUntilHitWall();
-    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT);
+    DriveSkidFirstUntilHitWall(QUARTER_POWER_PERCENT);
     BackRightTurnUntilCornerHitWall();
-    DriveForwardUntilHitWall(QUARTER_POWER_PERCENT, QUARTER_POWER_PERCENT);
+    DriveSkidFirstUntilHitWall(QUARTER_POWER_PERCENT);
 }

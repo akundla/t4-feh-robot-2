@@ -1,12 +1,13 @@
 #include "common.h"
 
-// TODO: Fine-tune for each motor setup
 //Create a function to drive motors forward until microswitch is pressed.
-void DriveForwardUntilHitWall(int left_motor_percent, int right_motor_percent)
+void DriveSkidFirstUntilHitWall(int motorPowerPercent)
 {
     //Turn both motors on at given percent motor power.
-    leftMotor.SetPercent(left_motor_percent + LEFT_MOTOR_OFFSET);
-    rightMotor.SetPercent(right_motor_percent);
+    // Left and Right motor must be driven at different percentages
+    // Robot will drive skids first
+    leftMotor.SetPercent(motorPowerPercent + LEFT_MOTOR_OFFSET);
+    rightMotor.SetPercent(-motorPowerPercent);
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed

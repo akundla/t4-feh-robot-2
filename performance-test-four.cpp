@@ -3,6 +3,7 @@
 #include "shaft-encoders-drive-functions.h"
 #include "time-drive-functions.h"
 #include "rps-functions.h"
+#include "bump-switch-functions.h"
 
 void performanceTestFour() {
 
@@ -180,8 +181,7 @@ void performanceTestFour() {
 
     //Drive in +x direction so arm is over foosball
     //TODO: Make this a constant
-    //TODO: move lower servo back
-    driveForInches(SKID_FIRST, 1.25, TURN_POWER);
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
 
     // Wait after turning
     Sleep(1.0);

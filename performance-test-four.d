@@ -17,7 +17,7 @@
  Drivers/adc16.h Libraries/FEHRPS.h Drivers/FEHXBee.h \
  Libraries/FEHMotor.h Libraries/FEHServo.h ..\/cds-cell-functions.h \
  ..\/shaft-encoders-drive-functions.h ..\/time-drive-functions.h \
- ..\/rps-functions.h
+ ..\/rps-functions.h ..\/bump-switch-functions.h
 
 C:\fehqt\Proteus/EWL/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -78,3 +78,5 @@ Libraries/FEHServo.h:
 ..\/time-drive-functions.h:
 
 ..\/rps-functions.h:
+
+..\/bump-switch-functions.h:
