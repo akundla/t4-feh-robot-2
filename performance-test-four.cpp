@@ -8,12 +8,12 @@
 void performanceTestFour() {
 
     // Flag to make it go to blue
-    bool forceBlue = true;
+    bool forceBlue = false;
 
     // Calibration Values
     const double inchesToDriveOnStart = 3.60;
     // 11 counts makes a 45 degree turn.
-    const int countsToTurn = 10;
+    const int countsToTurn = 11;
     // Distance to drive to red button
     const double inchesToDriveToButton = 7.5;
 
@@ -21,7 +21,7 @@ void performanceTestFour() {
     LCD.Clear();
 
     // Set arm servos to initial position
-    lower_servo.SetDegree(15);
+    lower_servo.SetDegree(0);
     upper_servo.SetDegree(140);
 
     float x, y;
@@ -56,6 +56,9 @@ void performanceTestFour() {
     // Turn Clockwise about 45 degrees to face DDR buttons
     turnCountsInPlace(CLOCKWISE, countsToTurn, TURN_POWER);
 
+    //check robot heading   ALYZA ADDED
+    check_heading(356);
+
     LCD.Clear();
     LCD.WriteLine("Driving to red button...");
 
@@ -83,10 +86,17 @@ void performanceTestFour() {
     // Hits the red button. This is DIALED IN, don't recalibrate unless it stops working - AK 8:55PM Wednesday 27th February 2019
     if (IS_RED) {
         // Drives the robot up to be level with the red button
-        driveForInches(SKID_FIRST, 4.0, DRIVE_POWER / 2.0);
+
+        //check heading before driving to align with red button
+        check_heading(0);
+
+        driveForInches(SKID_FIRST, 3.5, DRIVE_POWER / 2.0);
 
         // Turn 90 degrees so the wheel-side of the robot faces the buttons
         turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
+
+        //check robot angle
+        check_heading(90);
 
         // Drives the robot into the button
         driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
@@ -98,10 +108,13 @@ void performanceTestFour() {
         driveForInches(SKID_FIRST, 0.5, DRIVE_POWER);
 
         //Turn 90 Degrees to face the second light
-        turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
+        turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);;
 
         //Drive to second light
-        driveForInches(SKID_FIRST, 3.9, DRIVE_POWER / 2.0);
+        DriveSkidFirstUntilHitWall(DRIVE_POWER);
+
+        //drive slightly away from wall
+        driveForInches(WHEELS_FIRST, 1.25, DRIVE_POWER);
 
         //Turn to face acrylic ramp
         turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
@@ -111,11 +124,17 @@ void performanceTestFour() {
         // TODO: Calibrate, it's definitely more than 5
         const double inchesToBlueButton = 8.0;
 
+        //check robot heading
+        check_heading(0);
+
         // Drives the robot up to be level with the second button
         driveForInches(SKID_FIRST, inchesToBlueButton, DRIVE_POWER / 2.0);
 
         // Turn 90 degrees so the wheel-side of the robot faces the buttons
         turnCountsInPlace(COUNTER_CLOCKWISE, 24, TURN_POWER);
+
+        //check robot angle
+        check_heading(90);
 
         // Drives the robot into the button
         driveForSeconds(WHEELS_FIRST, 2.0, (DRIVE_POWER / 3) + 10);
@@ -132,7 +151,7 @@ void performanceTestFour() {
     const double inchesToLineUpWithCounters = 1.5;
     const double inchesToCounters = 9.5;
     const float degreeToHitCountersWall = 20;
-    const double countersDistance = 2.5;
+    const double countersDistance = 9.5;
     const float degreePastVertical = 0;
     const float degreeBack = 25;
     const double inchesToLever = 10;
@@ -148,8 +167,11 @@ void performanceTestFour() {
     const double xPosition = 30;
     const double yPosition = 53.5;
 
+    //Mitchie needs to rest
+    Sleep(1.0);
+
     //Check heading before going up ramp, account for left-drifting tendency
-    check_heading(80);
+    check_heading(72);
 
     // Drive up the acrylic ramp
     driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER+15);
@@ -168,27 +190,27 @@ void performanceTestFour() {
     driveForInches(SKID_FIRST, inchesToLineUpWithCounters, DRIVE_POWER);
 
     // Turn 90 degrees so the wheels and arm face the counters
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn+1, TURN_POWER);
 
-    // Stick the lever straight out so it doesn't hit the frame of the foosball counters
+    // Stick the arm straight out so it doesn't hit the frame of the foosball counters
     lower_servo.SetDegree(180);
 
     // Drive to counters
     driveForInches(WHEELS_FIRST, inchesToCounters, DRIVE_POWER);
 
+    //fix mitchie geting stuck when she sees the red light
+    if(IS_RED)
+    {
+        driveForInches(SKID_FIRST, 0.1, DRIVE_POWER);
+    }
+
     // Rotate to be parallel to counters
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn-1, TURN_POWER);
 
     //Drive in +x direction to line up with wall
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
 
     // Wait after driving
-    Sleep(1.0);
-
-    // Drive to line up with counters
-    driveForInches(WHEELS_FIRST, 2.5, DRIVE_POWER/2);
-
-    // Wait after turning
     Sleep(1.0);
 
     // Rotate arm to hit counters back wall
@@ -207,34 +229,35 @@ void performanceTestFour() {
     driveForInches(WHEELS_FIRST, countersDistance, DRIVE_POWER / 2.0);
 
     // Rotate arm on its axis to no longer touch counters
-    upper_servo.SetDegree(0);
+    upper_servo.SetDegree(140);
 
     // TODO: Make constant
-    lower_servo.SetDegree(180);
+    lower_servo.SetDegree(0);
 
-    // Drives over to lever
-    driveForInches(WHEELS_FIRST, inchesToLever, DRIVE_POWER);
+    //Turn to angle away from foosball counters
+    turnCountsInPlace(CLOCKWISE, 1, TURN_POWER);
 
-    // Rotate 45 degrees to drive past lever
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn / 2, TURN_POWER);
-    // Drive past lever
-    driveForInches(WHEELS_FIRST, inchesPastLever, DRIVE_POWER);
+    //drive to right side wall of course
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
 
-    // Rotate 45 degrees to drive past lever
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn / 2, TURN_POWER);
+    //drive away from wall
+    driveForInches(WHEELS_FIRST, 0.5, DRIVE_POWER);
 
-    // Drive to top of steep ramp
-    driveForInches(WHEELS_FIRST, inchesToSteepRamp, DRIVE_POWER);
+    //turn to align with acrylic ramp
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
-    check_heading(WHEELS_COURSE_BOTTOM);
-    check_y_plus(yTopOfSteepRamp);
+    //drive up to acrylic ramp
+    driveForInches(WHEELS_FIRST, 8, DRIVE_POWER);
 
-    // Drive down steep ramp
-    driveForInches(WHEELS_FIRST, inchesDownRamp, DRIVE_POWER);
+    //turn to face left wall
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn+1, TURN_POWER);
 
-    // Rotate 45 degrees to face button
-    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn / 2, TURN_POWER);
+    //drive to left wall
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
 
-    // Hit finish button
-    driveForSeconds(WHEELS_FIRST, secondsToPressButton, DRIVE_POWER);
+    //turn to face the steep ramp
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn+1, TURN_POWER);
+
+    //hit final button
+    driveForInches(WHEELS_FIRST, 40, DRIVE_POWER+15);
 }
