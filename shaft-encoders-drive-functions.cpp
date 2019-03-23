@@ -128,7 +128,8 @@ void turnCountsInPlace(bool turnClockwise, int counts, int motorPowerPercent) {
 
     //While the average of the left and right encoder are less than counts,
     //keep running motors
-    while((left_encoder.Counts() + right_encoder.Counts()) / 2. < counts);
+    float timeout = TimeNow();
+    while((left_encoder.Counts() + right_encoder.Counts()) / 2.0 < counts && ((TimeNow() - timeout) < SECONDS_TIMEOUT));
 
     // Stops both motors
     leftMotor.Stop();

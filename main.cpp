@@ -6,6 +6,7 @@
 #include "shaft-encoders-drive-functions.h"
 #include "rps-functions.h"
 #include "cds-cell-functions.h"
+#include "pid-drive-functions.h"
 
 // INCLUDE EXPLORATION CODE
 #include "exploration-one.h"
@@ -71,6 +72,10 @@ void setupServos() {
 int main(void) {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
     calibrateServos();
+
+//    double inchesToDrive = 20.0;
+//    float inchesPerSecond = 10.0;
+//    driveForInchesPID(SKID_FIRST, inchesToDrive, inchesPerSecond);
 
     // Call desired function
     performanceTestFour();

@@ -17,6 +17,8 @@ performance-test-three.cpp
 performance-test-three.h
 performance-test-two.cpp
 performance-test-two.h
+pid-drive-functions.cpp
+pid-drive-functions.h
 rps-functions.cpp
 rps-functions.h
 shaft-encoders-drive-functions.cpp

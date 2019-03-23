@@ -114,7 +114,7 @@ void performanceTestFour() {
         DriveSkidFirstUntilHitWall(DRIVE_POWER);
 
         //drive slightly away from wall
-        driveForInches(WHEELS_FIRST, 1.25, DRIVE_POWER);
+        driveForInches(WHEELS_FIRST, 1.0, DRIVE_POWER);
 
         //Turn to face acrylic ramp
         turnCountsInPlace(COUNTER_CLOCKWISE, 22, TURN_POWER);
@@ -149,7 +149,7 @@ void performanceTestFour() {
     const double inchesUpAcrylicRamp = 34;
     const double ticksIn90DegreeTurn = 22;
     const double inchesToLineUpWithCounters = 1.5;
-    const double inchesToCounters = 9.5;
+    const double inchesToCounters = 10;
     const float degreeToHitCountersWall = 20;
     const double countersDistance = 9.5;
     const float degreePastVertical = 0;
@@ -225,11 +225,39 @@ void performanceTestFour() {
     // Wait after turning
     Sleep(1.0);
 
-    // Drive forward dragging the counters along
-    driveForInches(WHEELS_FIRST, countersDistance, DRIVE_POWER / 2.0);
+    bool shouldYEET = true;
 
-    // Rotate arm on its axis to no longer touch counters
-    upper_servo.SetDegree(140);
+    if (!shouldYEET) {
+        // Drive forward dragging the counters along
+        driveForInches(WHEELS_FIRST, countersDistance - 1.0, DRIVE_POWER / 2.0);
+
+        // Wait after turning
+        Sleep(1.0);
+
+        // TODO: Make constant
+        lower_servo.SetDegree(60);
+
+        // Wait after turning
+        Sleep(1.0);
+
+        // Rotate arm on its axis to shove counters into wall
+        upper_servo.SetDegree(170);
+
+        // Wait after turning
+        Sleep(1.0);
+    } else {
+        // Drive forward dragging the counters along
+        driveForInches(WHEELS_FIRST, countersDistance * 2.0/3.0, DRIVE_POWER / 2.0);
+
+        // Wait after turning
+        Sleep(1.0);
+
+        // TODO: Make constant
+        lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
+
+        // Wait after turning
+        Sleep(1.0);
+    }
 
     // TODO: Make constant
     lower_servo.SetDegree(0);

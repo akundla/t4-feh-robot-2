@@ -11,7 +11,8 @@ void DriveSkidFirstUntilHitWall(int motorPowerPercent)
 
     // Psuedo-infinite loop to burn time while both switches are not pressed.
     // Note that bump switches are "true" when not pressed and "false" when pressed
-    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1) {
+    float timeout = TimeNow();
+    while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1  && ((TimeNow() - timeout) < SECONDS_TIMEOUT)) {
         LCD.WriteLine("BUMP SWITCHES NOT PRESSED");
 
         if (skidServoCornerBump.Value() == 0)  {

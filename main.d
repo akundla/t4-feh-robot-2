@@ -18,9 +18,10 @@
  Libraries/FEHMotor.h Libraries/FEHServo.h ..\/time-drive-functions.h \
  ..\/bump-switch-functions.h ..\/line-follower-functions.h \
  ..\/shaft-encoders-drive-functions.h ..\/rps-functions.h \
- ..\/cds-cell-functions.h ..\/exploration-one.h ..\/exploration-two.h \
- ..\/performance-test-one.h ..\/performance-test-two.h \
- ..\/performance-test-three.h ..\/performance-test-four.h
+ ..\/cds-cell-functions.h ..\/pid-drive-functions.h ..\/exploration-one.h \
+ ..\/exploration-two.h ..\/performance-test-one.h \
+ ..\/performance-test-two.h ..\/performance-test-three.h \
+ ..\/performance-test-four.h
 
 C:\fehqt\Proteus/EWL/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -85,6 +86,8 @@ Libraries/FEHServo.h:
 ..\/rps-functions.h:
 
 ..\/cds-cell-functions.h:
+
+..\/pid-drive-functions.h:
 
 ..\/exploration-one.h:
 
