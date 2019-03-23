@@ -73,8 +73,8 @@ int main(void) {
     // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
     calibrateServos();
 
-//    double inchesToDrive = 20.0;
-//    float inchesPerSecond = 10.0;
+//    double inchesToDrive = 60.0;
+//    float inchesPerSecond = 12.0;
 //    driveForInchesPID(SKID_FIRST, inchesToDrive, inchesPerSecond);
 
     // Call desired function

@@ -257,10 +257,14 @@ void performanceTestFour() {
 
         // Wait after turning
         Sleep(1.0);
+
+        upper_servo.SetDegree(170);
+
+        Sleep(1.0);
     }
 
     // TODO: Make constant
-    lower_servo.SetDegree(0);
+    lower_servo.SetDegree(15);
 
     //Turn to angle away from foosball counters
     turnCountsInPlace(CLOCKWISE, 1, TURN_POWER);
