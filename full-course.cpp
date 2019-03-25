@@ -14,7 +14,7 @@ void navigateFullCourse() {
     const double InchesUpRamp = 31.5;
     const double InchesToCoin = 5.5;
     const double InchesToCoinSlot = 2;
-    const float rampPower = DRIVE_POWER * 1.37;
+    const float rampPower = DRIVE_POWER * 1.42;
     const float yTopOfShortRamp = 46.0;
     const int ticksIn90DegreeTurn = 22;
     const float xCoinSlot = 19.0;
