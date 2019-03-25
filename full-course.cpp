@@ -210,6 +210,7 @@ void navigateFullCourse() {
         driveForInches(WHEELS_FIRST, inchesUpAcrylicRamp, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
         // Check for being vertically down
+        Sleep(RPS_SLEEP_SECONDS);
         check_heading(WHEELS_COURSE_BOTTOM);
 
         check_y_plus(yDDRLight);
@@ -237,17 +238,21 @@ void navigateFullCourse() {
             // Turn 90 degrees so the wheel-side of the robot faces the left wall
             turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
+            // Allows the robot to settle then checks the heading
+            Sleep(RPS_SLEEP_SECONDS);
             check_heading(WHEELS_COURSE_LEFT);
 
             // Drives the robot up to be level with the red button
             driveForInches(SKID_FIRST, inchesToRedButton, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
 
-            check_heading(WHEELS_COURSE_LEFT);
-
             check_x_plus(xOfRedButton);
 
             // Turn 90 degrees so the wheel-side of the robot faces the buttons
             turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+
+            // Allows the robot to settle then checks the heading
+            Sleep(RPS_SLEEP_SECONDS);
+            check_heading(WHEELS_COURSE_BOTTOM);
 
             // Drives the robot into the button
             driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
@@ -288,5 +293,4 @@ void navigateFullCourse() {
         // hit final button
         DriveSkidFirstUntilHitWall(DRIVE_POWER);
     }
-    }
-
+}

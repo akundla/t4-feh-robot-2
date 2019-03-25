@@ -21,6 +21,7 @@
 #define TURN_POWER 20.0
 // Standard percentage for motor checking
 #define RPS_POWER 15.0
+#define RPS_SLEEP_SECONDS 0.5
 
 // SERVOS
 // Calibration values for lower servo
