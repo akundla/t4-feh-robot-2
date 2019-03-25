@@ -24,7 +24,7 @@ void waitForTouch() {
 void setupServos() {
     // Set arm servos to initial position
     lower_servo.SetDegree(15);
-    upper_servo.SetDegree(160);
+    upper_servo.SetDegree(165);
 }
 
 void prepareToLaunch() {
