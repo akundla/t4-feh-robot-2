@@ -156,15 +156,27 @@ void navigateFullCourse() {
         Sleep(1.0);
     } else {
         // Drive forward dragging the counters along
-        driveForInches(WHEELS_FIRST, countersDistance * 2.0/3.0, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
+        driveForInches(WHEELS_FIRST, (countersDistance * 2.0/3.0) + 2.0, DRIVE_POWER / 2.0, 0.04);
 
         // Wait after turning
         Sleep(1.0);
 
-        // TODO: Make constant
-        lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
+        upper_servo.SetDegree(170);
 
-        // Wait after turning
+        Sleep(1.0);
+
+        // Drive forward dragging the counters along
+        driveForInches(SKID_FIRST, 3.0, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
+
+        Sleep(1.0);
+
+        upper_servo.SetDegree(UPPER_DEGREE_VERTICAL_DOWN);
+
+        Sleep(1.0);
+
+        // Drive forward dragging the counters along
+        driveForInches(WHEELS_FIRST, 3.5, DRIVE_POWER / 2.0, 0.04);
+
         Sleep(1.0);
 
         upper_servo.SetDegree(170);
@@ -198,97 +210,98 @@ void navigateFullCourse() {
     // TODO: Completely uncalibrated
     const double yDDRLight = 10;
 
+    // Rotate robot to be ready for skids first down the ramp
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn*2, TURN_POWER);
+    check_heading(SKIDS_COURSE_BOTTOM);
+
+    check_y_plus(yTopOfLongRamp);
+
     // Check for being vertically down
+    Sleep(RPS_SLEEP_SECONDS);
+    check_heading(WHEELS_COURSE_BOTTOM);
+    // Drive down ramp
+    driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-    if (skidFirstDownRamp)
+    // Check for being vertically down
+    check_heading(WHEELS_COURSE_BOTTOM);
+
+    check_y_plus(yDDRLight);
+
+    // Detects chosen light color
+    bool IS_RED = false;
+    if (detectLight(RED_LIGHT_RED_F_V_AVG))
     {
-        check_heading(WHEELS_COURSE_BOTTOM);
+        IS_RED = true;
+        LCD.WriteLine("Detected Red Light");
+        Sleep(5.0);
+    } else {
+        LCD.WriteLine("Detected Blue Light");
+        Sleep(5.0);
+    }
 
-        check_y_plus(yTopOfLongRamp);
+    if (IS_RED) {
+        const double inchesToRedButton = 9.0;
+        // TODO: Calibrate
+        const float xOfRedButton = 12;
 
-        // Drive down ramp
-        driveForInches(WHEELS_FIRST, inchesUpAcrylicRamp, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+        // Turn 90 degrees so the wheel-side of the robot faces the left wall
+        turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
-        // Check for being vertically down
+        // Allows the robot to settle then checks the heading
+        Sleep(RPS_SLEEP_SECONDS);
+        check_heading(WHEELS_COURSE_LEFT);
+
+        // Drives the robot up to be level with the red button
+        driveForInches(SKID_FIRST, inchesToRedButton, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
+
+        check_x_plus(xOfRedButton);
+
+        // Turn 90 degrees so the wheel-side of the robot faces the buttons
+        turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+
+        // Allows the robot to settle then checks the heading
         Sleep(RPS_SLEEP_SECONDS);
         check_heading(WHEELS_COURSE_BOTTOM);
 
-        check_y_plus(yDDRLight);
+        // Drives the robot into the button
+        driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
 
-        // TODO: Something needs to be done here about the x positioning. Maybe a diagonal thingy?
-        // TODO: Consider making the robot go down the ramp skid first, Mitchie struggled going down wheel first
+        // Holds the button down
+        Sleep(5.0);
 
-        // Detects chosen light color
-        bool IS_RED = false;
-        if (detectLight(RED_LIGHT_RED_F_V_AVG))
-        {
-            IS_RED = true;
-            LCD.WriteLine("Detected Red Light");
-            Sleep(5.0);
-        } else {
-            LCD.WriteLine("Detected Blue Light");
-            Sleep(5.0);
-        }
+        // Releases the button
+        driveForInches(SKID_FIRST, 0.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    }
+    else {
+        // Drives the robot into the blue button
+        driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
 
-        if (IS_RED) {
-            const double inchesToRedButton = 9.0;
-            // TODO: Calibrate
-            const float xOfRedButton = 12;
+        // Holds the button down
+        Sleep(5.0);
 
-            // Turn 90 degrees so the wheel-side of the robot faces the left wall
-            turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
-
-            // Allows the robot to settle then checks the heading
-            Sleep(RPS_SLEEP_SECONDS);
-            check_heading(WHEELS_COURSE_LEFT);
-
-            // Drives the robot up to be level with the red button
-            driveForInches(SKID_FIRST, inchesToRedButton, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
-
-            check_x_plus(xOfRedButton);
-
-            // Turn 90 degrees so the wheel-side of the robot faces the buttons
-            turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
-
-            // Allows the robot to settle then checks the heading
-            Sleep(RPS_SLEEP_SECONDS);
-            check_heading(WHEELS_COURSE_BOTTOM);
-
-            // Drives the robot into the button
-            driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
-
-            // Holds the button down
-            Sleep(5.0);
-
-            // Releases the button
-            driveForInches(SKID_FIRST, 0.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
-        } else {
-            // Drives the robot into the blue button
-            driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
-
-            // Holds the button down
-            Sleep(5.0);
-
-            // Releases the button
-            driveForInches(SKID_FIRST, 0.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+        // Releases the button
+        driveForInches(SKID_FIRST, 0.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
 
-        }
+    }
+    const double inchesToDriveOnStart = 3.40;
+    // 11 counts makes a 45 degree turn. Don't mess with it.
+    const int countsToTurn = 11;
+    // 8 Inches is virtually perfect
+    const double inchesToDriveToButton = 7.5;
 
-        const double inchesToDriveOnStart = 3.40;
-        // 11 counts makes a 45 degree turn. Don't mess with it.
-        const int countsToTurn = 11;
-        // 8 Inches is virtually perfect
-        const double inchesToDriveToButton = 7.5;
+    // Turn to face ending button
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, DRIVE_POWER);
 
-        // Turn to face ending button
-        turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, DRIVE_POWER);
+    //Drive back to start
+    driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-        //Drive back to start
-        driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    //Turn Clockwise about 45 degrees to face end button
+    turnCountsInPlace(COUNTER_CLOCKWISE, countsToTurn, TURN_POWER);
 
-        //Turn Clockwise about 45 degrees to face end button
-        turnCountsInPlace(COUNTER_CLOCKWISE, countsToTurn, TURN_POWER);
+    // hit final button
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
+}
 
         // hit final button
         DriveSkidFirstUntilHitWall(DRIVE_POWER);
