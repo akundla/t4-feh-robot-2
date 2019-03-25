@@ -18,7 +18,7 @@ void explorationTwoShaftEncoders () {
     LCD.WriteLine("1. Starting driving");
 
     // Move forward one revolution
-    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     LCD.WriteLine("2. Driving complete, turning");
 
@@ -28,7 +28,7 @@ void explorationTwoShaftEncoders () {
     LCD.WriteLine("3. Turning complete, driving");
 
     // Move forward one revolution
-    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     LCD.WriteLine("4. Driving complete, turning");
 
@@ -38,7 +38,7 @@ void explorationTwoShaftEncoders () {
     LCD.WriteLine("5. Turning complete, driving");
 
     // Move forward one revolution
-    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER);
+    driveForInches(WHEELS_FIRST, WHEEL_CIRCUMFERENCE, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     LCD.WriteLine("6. Driving complete, Done. ");
 }

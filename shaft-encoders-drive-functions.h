@@ -3,7 +3,7 @@
 
 void printShaftEncoderValues ();
 
-void driveForInches(bool skidFirst, double inches, int motorPowerPercent);
+void driveForInches(bool skidFirst, double inches, int motorPowerPercent, float leftMotorOffset);
 
 void turnCountsInPlace(bool turnClockwise, int counts, int motorPowerPercent);
 

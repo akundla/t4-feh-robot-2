@@ -31,7 +31,7 @@ void printShaftEncoderValues () {
     }
 }
 
-void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //using encoders
+void driveForInches(bool skidFirst, double inches, int motorPowerPercent, float leftMotorOffset) //using encoders
 {
     //Reset encoder counts
     right_encoder.ResetCounts();
@@ -49,12 +49,12 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent) //usin
 
     // Drives skids first
     if (skidFirst) {
-        leftMotorPowerPercent = motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET);
+        leftMotorPowerPercent = motorPowerPercent + (motorPowerPercent * leftMotorOffset);
         rightMotorPowerPercent = -motorPowerPercent;
     }
     // Drives wheels first
     else {
-        leftMotorPowerPercent = -(motorPowerPercent + (motorPowerPercent * LEFT_MOTOR_OFFSET));
+        leftMotorPowerPercent = -(motorPowerPercent + (motorPowerPercent * leftMotorOffset));
         rightMotorPowerPercent = motorPowerPercent;
     }
 

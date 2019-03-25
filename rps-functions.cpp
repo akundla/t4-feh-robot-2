@@ -40,12 +40,12 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
             if(RPS.X() > x_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
             else if(RPS.X() < x_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
         }
         // else the skids are pointing right
@@ -53,12 +53,12 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
             if(RPS.X() > x_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
             else if(RPS.X() < x_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
         }
     }
@@ -75,12 +75,12 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
             if(RPS.Y() > y_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
             else if(RPS.Y() < y_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
         }
         // else the skids are pointing down
@@ -88,12 +88,12 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
             if(RPS.Y() > y_coordinate)
             {
                 //pulse the motors for one tick in the correct direction
-                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
             else if(RPS.Y() < y_coordinate)
             {
                 //pulse the motors for a short duration in the correct direction
-                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER);
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
             }
         }
     }
