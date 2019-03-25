@@ -211,6 +211,7 @@ void navigateFullCourse() {
     check_y_plus(yDDRLight);
 
     // TODO: Something needs to be done here about the x positioning. Maybe a diagonal thingy?
+    // TODO: Consider making the robot go down the ramp skid first, Mitchie struggled going down wheel first
 
     // Detects chosen light color
     bool IS_RED = false;
