@@ -222,7 +222,8 @@ void navigateFullCourse() {
     // Drive down ramp
     driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-    // Check for being vertically down
+    // TUrn back around and check
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn*2, TURN_POWER);
     check_heading(WHEELS_COURSE_BOTTOM);
 
     check_y_plus(yDDRLight);
@@ -301,9 +302,7 @@ void navigateFullCourse() {
 
     // hit final button
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
-}
 
-        // hit final button
-        DriveSkidFirstUntilHitWall(DRIVE_POWER);
-    }
+    // hit final button
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
 }
