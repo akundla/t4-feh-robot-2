@@ -5,6 +5,8 @@ void printCDsCellValues();
 
 void detectBlueLight();
 
+bool detectLight(double lightVoltage);
+
 void waitForStartLight();
 
 void moveServoToLight();

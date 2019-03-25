@@ -36,7 +36,7 @@ void performanceTestThree() {
     upper_servo.SetDegree(140);
 
     float x, y;
-    LCD.WriteLine("Performance test 3 servo testing");
+    LCD.WriteLine("Performance Test 3");
     LCD.WriteLine("Set the arm to the correct position you robot champion!");
     LCD.WriteLine("Then touch the screen to continue");
     while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed

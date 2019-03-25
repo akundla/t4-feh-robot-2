@@ -17,6 +17,7 @@
 #include "performance-test-two.h"
 #include "performance-test-three.h"
 #include "performance-test-four.h"
+#include "full-course.h"
 
 // SENSORS
 //Declare a CdS Cell sensor as an analog input and assign it to an IO port
@@ -40,38 +41,10 @@ FEHServo upper_servo (FEHServo::Servo0);
 DigitalInputPin skidServoCornerBump (FEHIO::P3_7);
 DigitalInputPin skidNonServoCornerBump (FEHIO::P3_0);
 
-// Calibrates the servos
-void calibrateServos() {
-    // Calibrate lower Servo
-    lower_servo.SetMin(LOWER_SERVO_MIN);
-    lower_servo.SetMax(LOWER_SERVO_MAX);
-
-    // Calibrate upper Servo
-    upper_servo.SetMin(UPPER_SERVO_MIN);
-    upper_servo.SetMax(UPPER_SERVO_MAX);
-}
-
-// Waits for the user to touch the screen
-void waitForTouch() {
-    float x, y;
-    LCD.WriteLine("Waiting for touch: Press and release the screen to continue");
-    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
-    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
-}
-
-// Sets the servos to the correct initial position
-void setupServos() {
-    // Set arm servos to initial position
-    lower_servo.SetDegree(15);
-    upper_servo.SetDegree(140);
-}
-
 /*
  * Main function: Calls whatever other function the robot is to run.
  */
 int main(void) {
-    // When using servos: Consider calling servo.TouchCalibrate(); if this is the first run with those servos
-    calibrateServos();
 
 //    double inchesToDrive = 60.0;
 //    float inchesPerSecond = 12.0;
@@ -79,6 +52,7 @@ int main(void) {
 
     // Call desired function
     performanceTestFour();
+    //navigateFullCourse();
 
     // Just a conventional best practice
     return 0;

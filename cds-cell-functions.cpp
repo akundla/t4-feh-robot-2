@@ -26,6 +26,10 @@ void detectBlueLight() {
     }
 }
 
+bool detectLight(double lightVoltage) {
+    return (cdsCell.Value() < lightVoltage + MoE && cdsCell.Value() > lightVoltage - MoE);
+}
+
 void waitForStartLight () {
 
     // Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red

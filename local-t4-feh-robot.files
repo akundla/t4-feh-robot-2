@@ -7,8 +7,12 @@ exploration-one.cpp
 exploration-one.h
 exploration-two.cpp
 exploration-two.h
+full-course.cpp
+full-course.h
 line-follower-functions.h
 line-following-functions.cpp
+other-functions.cpp
+other-functions.h
 performance-test-four.cpp
 performance-test-four.h
 performance-test-one.cpp

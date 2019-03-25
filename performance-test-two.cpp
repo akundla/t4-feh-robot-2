@@ -63,16 +63,14 @@ void performanceTestTwoCounts () {
     // Pauses to allow the robot to settle
     Sleep(1.0);
 
-    // TODO: Get values from the sensor for blue and red lights through the filter.
+    // Detects chosen light color
     bool IS_RED = false;
-    if (cdsCell.Value() < RED_LIGHT_RED_F_V_AVG + MoE && cdsCell.Value() > RED_LIGHT_RED_F_V_AVG - MoE)
+    if (detectLight(RED_LIGHT_RED_F_V_AVG))
     {
         IS_RED = true;
         LCD.WriteLine("Detected Red Light");
         Sleep(5.0);
-    }
-    else
-    {
+    } else {
         LCD.WriteLine("Detected Blue Light");
         Sleep(5.0);
     }
@@ -105,11 +103,10 @@ void performanceTestTwoCounts () {
     }
     // Otherwise the light is blue
     else {
-        // TODO: Calibrate, it's definitely more than 5
         const double inchesToBlueButton = 9.0;
 
         // Drives the robot up to be level with the second button
-        driveForInches(SKID_FIRST, 9.0, DRIVE_POWER / 2.0);
+        driveForInches(SKID_FIRST, inchesToBlueButton, DRIVE_POWER / 2.0);
 
         // Turn 90 degrees so the wheel-side of the robot faces the buttons
         turnCountsInPlace(COUNTER_CLOCKWISE, 24, TURN_POWER);
