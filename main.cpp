@@ -51,8 +51,8 @@ int main(void) {
 //    driveForInchesPID(SKID_FIRST, inchesToDrive, inchesPerSecond);
 
     // Call desired function
-    performanceTestFour();
-    //navigateFullCourse();
+    //performanceTestFour();
+    navigateFullCourse();
 
     // Just a conventional best practice
     return 0;

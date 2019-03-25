@@ -42,3 +42,22 @@ void prepareToLaunch() {
     //Wait for light
     waitForStartLight();
 }
+
+void dropCoin() {
+    const double SECONDS_TO_WAIT = 1.5;
+
+    // Rotates lower servo to put the arm in position
+    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
+
+    Sleep(SECONDS_TO_WAIT);
+
+    // Rotates upper servo to drop coin
+    upper_servo.SetDegree(UPPER_DEGREE_VERTICAL_DOWN);
+
+    Sleep(SECONDS_TO_WAIT);
+
+    // Rotates lower servo to put the arm in position
+    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT - 120);
+
+    Sleep(SECONDS_TO_WAIT);
+}
