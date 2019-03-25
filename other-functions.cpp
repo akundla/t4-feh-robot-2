@@ -1,4 +1,5 @@
 #include "common.h"
+#include "cds-cell-functions.h"
 
 // Calibrates the servos
 void calibrateServos() {

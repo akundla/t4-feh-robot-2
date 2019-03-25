@@ -3,6 +3,9 @@
 #include "shaft-encoders-drive-functions.h"
 #include "bump-switch-functions.h"
 #include "rps-functions.h"
+#include "time-drive-functions.h"
+#include "performance-test-three.h"
+#include "cds-cell-functions.h"
 
 // Drives the robot throughout the entire course, completing all tasks.
 void navigateFullCourse() {
@@ -21,6 +24,8 @@ void navigateFullCourse() {
     const double finalInchesToLever = 3.35;
     // TODO: Calibrate to the arm skips as few teeth as possible
     const int lowerDegreeToHitLever = 80;
+     const float degreeToHitCountersWall = 20;
+     const double countersDistance = 9.5;
 
     LCD.WriteLine("Full Course Navigator");
 

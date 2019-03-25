@@ -21,7 +21,7 @@
  ..\/cds-cell-functions.h ..\/pid-drive-functions.h ..\/exploration-one.h \
  ..\/exploration-two.h ..\/performance-test-one.h \
  ..\/performance-test-two.h ..\/performance-test-three.h \
- ..\/performance-test-four.h
+ ..\/performance-test-four.h ..\/full-course.h
 
 C:\fehqt\Proteus/EWL/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -100,3 +100,5 @@ Libraries/FEHServo.h:
 ..\/performance-test-three.h:
 
 ..\/performance-test-four.h:
+
+..\/full-course.h:
