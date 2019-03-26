@@ -12,9 +12,9 @@ void navigateFullCourse() {
     //Number of counts for 45 degree turn at beginning
     const double InitialTurn = 11;
     const double InchesUpRamp = 31.5;
-    const double InchesToCoin = 6.0;
+    const double InchesToCoin = 5.5;
     const double InchesToCoinSlot = 2;
-    const float rampPower = DRIVE_POWER * 1.30;
+    const float rampPower = DRIVE_POWER * 1.55;
     const float yTopOfShortRamp = 46.0;
     const int ticksIn90DegreeTurn = 22;
     const float xCoinSlot = 19.0;
@@ -105,6 +105,8 @@ void navigateFullCourse() {
 
     // Whack that lever
     lower_servo.SetDegree(lowerDegreeToHitLever);
+    // Sleep so servo can finish moving
+    Sleep(0.6);
 
     // UNTESTED CODE BEGINS HERE
 
@@ -222,7 +224,8 @@ void navigateFullCourse() {
     // Drive down ramp
     driveForInches(SKID_FIRST, inchesUpAcrylicRamp, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-    // Check for being vertically down
+    // TUrn back around and check
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn*2, TURN_POWER);
     check_heading(WHEELS_COURSE_BOTTOM);
 
     check_y_plus(yDDRLight);
@@ -301,9 +304,7 @@ void navigateFullCourse() {
 
     // hit final button
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
-}
 
-        // hit final button
-        DriveSkidFirstUntilHitWall(DRIVE_POWER);
-    }
+    // hit final button
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
 }
