@@ -38,7 +38,7 @@ void navigateFullCourse() {
     check_heading(SKIDS_COURSE_TOP);
 
     //Drive robot to top of ramp
-    driveForInches(SKID_FIRST, InchesUpRamp, rampPower, LEFT_MOTOR_OFFSET);
+    driveForInches(SKID_FIRST, InchesUpRamp, rampPower, 0);
 
     // Align 90 degrees
     check_heading(SKIDS_COURSE_TOP);
@@ -108,15 +108,52 @@ void navigateFullCourse() {
     // Sleep so servo can finish moving
     Sleep(0.6);
 
+    upper_servo.SetDegree(15);
+
     // UNTESTED CODE BEGINS HERE
 
     //Drive back from lever
-    driveForInches(SKID_FIRST, finalInchesToLever, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    driveForInches(SKID_FIRST, 1.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+
+    lower_servo.SetDegree(15);
+    Sleep(0.5);
+    upper_servo.SetDegree(140);
+    Sleep(0.5);
 
     // Turn so skids face right wall
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn - ticksFinalTurnForLever, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, ticksFinalTurnForLever, TURN_POWER);
+
+    driveForInches(SKID_FIRST, 8.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+
+    driveForInches(SKID_FIRST, 6.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+
+    turnCountsInPlace(COUNTER_CLOCKWISE, 11, TURN_POWER);
+
+    driveForInches(SKID_FIRST, 5.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+
+    turnCountsInPlace(CLOCKWISE, 11, TURN_POWER);
 
     // Drive until you hit the wall
+    DriveSkidFirstUntilHitWall(DRIVE_POWER);
+
+    driveForInches(WHEELS_FIRST, 1.5, DRIVE_POWER/2, LEFT_MOTOR_OFFSET);
+
+    turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
+
+    // Stick the arm straight out so it doesn't hit the frame of the foosball counters
+    lower_servo.SetDegree(180);
+
+    Sleep(2.0);
+
+    // Drive to counters
+    driveForInches(WHEELS_FIRST, 8.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+
+    // Rotate to be parallel to counters
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn-1, TURN_POWER);
+
+    //Drive in +x direction to line up with wall
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
 
     // TESTED (and maybe slightly inconsistent) code begins again here

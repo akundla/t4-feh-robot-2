@@ -18,8 +18,8 @@
  Libraries/FEHMotor.h Libraries/FEHServo.h ..\/time-drive-functions.h \
  ..\/bump-switch-functions.h ..\/line-follower-functions.h \
  ..\/shaft-encoders-drive-functions.h ..\/rps-functions.h \
- ..\/cds-cell-functions.h ..\/pid-drive-functions.h ..\/exploration-one.h \
- ..\/exploration-two.h ..\/performance-test-one.h \
+ ..\/cds-cell-functions.h ..\/pid-drive-functions.h ..\/other-functions.h \
+ ..\/exploration-one.h ..\/exploration-two.h ..\/performance-test-one.h \
  ..\/performance-test-two.h ..\/performance-test-three.h \
  ..\/performance-test-four.h ..\/full-course.h
 
@@ -88,6 +88,8 @@ Libraries/FEHServo.h:
 ..\/cds-cell-functions.h:
 
 ..\/pid-drive-functions.h:
+
+..\/other-functions.h:
 
 ..\/exploration-one.h:
 

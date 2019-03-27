@@ -7,6 +7,7 @@
 #include "rps-functions.h"
 #include "cds-cell-functions.h"
 #include "pid-drive-functions.h"
+#include "other-functions.h"
 
 // INCLUDE EXPLORATION CODE
 #include "exploration-one.h"
@@ -52,6 +53,28 @@ int main(void) {
 
     // Call desired function
     navigateFullCourse();
+
+//    calibrateServos();
+
+//    setupServos();
+
+//    Sleep(1.5);
+
+//    lower_servo.SetDegree(180);
+
+//    Sleep(1.5);
+
+//    lower_servo.SetDegree(0);
+
+//    Sleep(1.5);
+
+//    lower_servo.SetDegree(180);
+
+//    Sleep(1.5);
+
+//    lower_servo.SetDegree(0);
+
+
 
     // Just a conventional best practice
     return 0;
