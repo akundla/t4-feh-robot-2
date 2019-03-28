@@ -42,39 +42,41 @@ FEHServo upper_servo (FEHServo::Servo0);
 DigitalInputPin skidServoCornerBump (FEHIO::P3_7);
 DigitalInputPin skidNonServoCornerBump (FEHIO::P3_0);
 
+void testArm() {
+    calibrateServos();
+
+    setupServos();
+
+    Sleep(1.5);
+
+    waitForTouch();
+
+    dropCoin();
+
+    upper_servo.SetDegree(0);
+
+    lower_servo.SetDegree(180);
+
+    Sleep(1.5);
+
+    lower_servo.SetDegree(0);
+
+    Sleep(1.5);
+
+    lower_servo.SetDegree(180);
+
+    Sleep(1.5);
+
+    lower_servo.SetDegree(0);
+}
+
 /*
  * Main function: Calls whatever other function the robot is to run.
  */
 int main(void) {
 
-//    double inchesToDrive = 60.0;
-//    float inchesPerSecond = 12.0;
-//    driveForInchesPID(SKID_FIRST, inchesToDrive, inchesPerSecond);
-
     // Call desired function
     navigateFullCourse();
-
-//    calibrateServos();
-
-//    setupServos();
-
-//    Sleep(1.5);
-
-//    lower_servo.SetDegree(180);
-
-//    Sleep(1.5);
-
-//    lower_servo.SetDegree(0);
-
-//    Sleep(1.5);
-
-//    lower_servo.SetDegree(180);
-
-//    Sleep(1.5);
-
-//    lower_servo.SetDegree(0);
-
-
 
     // Just a conventional best practice
     return 0;
