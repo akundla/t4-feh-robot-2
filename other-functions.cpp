@@ -44,7 +44,7 @@ void prepareToLaunch() {
 }
 
 void dropCoin() {
-    const double SECONDS_TO_WAIT = 1.5;
+    const double SECONDS_TO_WAIT = 1.0;
 
     // Rotates lower servo to put the arm in position
     lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);

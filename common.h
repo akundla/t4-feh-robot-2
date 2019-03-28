@@ -33,7 +33,7 @@
 #define UPPER_SERVO_MAX 2370
 
 // Directions for dropping coin
-#define LOWER_DEGREE_STRAIGHT_OUT 177
+#define LOWER_DEGREE_STRAIGHT_OUT 170
 #define UPPER_DEGREE_VERTICAL_DOWN 60
 
 
