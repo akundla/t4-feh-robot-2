@@ -76,8 +76,8 @@ void testArm() {
 int main(void) {
 
     // Call desired function
-    navigateFullCourse();
-
+    //navigateFullCourse();
     // Just a conventional best practice
-    return 0;
+    //return 0;
+    testArm();
 }
