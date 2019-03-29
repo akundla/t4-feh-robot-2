@@ -66,15 +66,15 @@ void performanceTestTwo () {
 //    // Detects chosen light color
 //    bool IS_RED = false;
 //    if (detectLight(RED_LIGHT_RED_F_V_AVG))
-//    {
-//        IS_RED = true;
-//        LCD.WriteLine("Detected Red Light");
+//    LCD.WriteLine("Detected Red Light");
 //        Sleep(5.0);
 //    } else {
 //        LCD.WriteLine("Detected Blue Light");
 //        Sleep(5.0);
 //    }
 
+//        IS_RED = true;
+//
 //    // Hits the red button. This is DIALED IN, don't recalibrate unless it stops working - AK 8:55PM Wednesday 27th February 2019
 //    if (IS_RED) {
 //        // Drives the robot up to be level with the red button

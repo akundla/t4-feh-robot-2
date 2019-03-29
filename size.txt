@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  54752	   3424	   5612	  63788	   f92c	../local-t4-feh-robot.elf
+  35808	   3424	   5612	  44844	   af2c	../local-t4-feh-robot.elf
