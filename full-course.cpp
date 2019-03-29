@@ -24,7 +24,7 @@ void navigateFullCourse() {
     const double finalInchesToLever = 3.35;
     // TODO: Calibrate to the arm skips as few teeth as possible
     const int lowerDegreeToHitLever = 80;
-     const float degreeToHitCountersWall = 35; //TODO: Old value was 10, needs to be calibrated a bit
+     const float degreeToHitCountersWall = 25; //TODO: Old value was 10, needs to be calibrated a bit
      const double countersDistance = 9.5;
 
     LCD.WriteLine("Full Course Navigator");
