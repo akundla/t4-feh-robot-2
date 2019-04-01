@@ -53,7 +53,7 @@ DigitalInputPin skidNonServoCornerBump (FEHIO::P3_0);
 int main(void) {
 
     // Call desired function
-    navigateFullCourse();
+    testArm();
 
     // Just a conventional best practice
     return 0;
