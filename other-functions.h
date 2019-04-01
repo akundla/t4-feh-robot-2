@@ -15,6 +15,9 @@ void waitForTouch();
 // Sets the servos to the correct initial position
 void setupServos();
 
+// Waits for the bump switch to be pressed and released
+void waitForSkidServoBumpSwitchPress();
+
 // Prepares the robot to run on the course
 void prepareToLaunch();
 

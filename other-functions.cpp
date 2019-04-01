@@ -32,6 +32,16 @@ void setupServos() {
     upper_servo.SetDegree(172);
 }
 
+// Waits for the bump switch to be pressed
+void waitForSkidServoBumpSwitchPress() {
+    while (skidServoCornerBump.Value() == 1) {
+        // Burns time while the switches are not pressed
+    }
+    while (skidServoCornerBump.Value() == 0) {
+        // Burns time while the switches ARE pressed
+    }
+}
+
 // Prepares the robot to run on the course
 void prepareToLaunch() {
     calibrateServos();
@@ -45,7 +55,10 @@ void prepareToLaunch() {
     //Choose which course for RPS
     RPS.InitializeTouchMenu();
 
-    // TODO: Wait for a bump switch to be pressed as the final action
+    LCD.WriteLine("Press and release the servo-side bump switch to start reading the light");
+
+    // Wait for a bump switch to be pressed as the final action
+    waitForSkidServoBumpSwitchPress();
 
     //Wait for light
     waitForStartLight();

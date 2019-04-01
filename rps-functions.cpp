@@ -39,7 +39,8 @@ void printRPSLocation() {
 void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direction
 {
     //check whether the robot is within an acceptable range
-    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1 && RPS.Heading() != -1 && RPS.Heading() != -2)
+    float startTime = TimeNow();
+    while(RPS.X() < x_coordinate - 1 || RPS.X() > x_coordinate + 1 && RPS.Heading() != -1 && RPS.Heading() != -2 && (TimeNow() - startTime) < SECONDS_TIMEOUT)
     {
         // Skids are pointing Left
         if (RPS.Heading() > 90 && RPS.Heading() < 270) {
@@ -74,7 +75,8 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
 void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direction
 {
     //check whether the robot is within an acceptable range
-    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1 && RPS.Heading() != -1 && RPS.Heading() != -2)
+    float startTime = TimeNow();
+    while(RPS.Y() < y_coordinate - 1 || RPS.Y() > y_coordinate + 1 && RPS.Heading() != -1 && RPS.Heading() != -2 && (TimeNow() - startTime) < SECONDS_TIMEOUT)
     {
         // Skids are pointing up
         if (RPS.Heading() > 0 && RPS.Heading() < 180) {
@@ -123,11 +125,9 @@ bool RPSIsWorking () {
 // Moves the robot into a specific heading.
 void check_heading(float heading) //using RPS
 {
-    // The current timeout
-    float timeout = TimeNow();
-
     // While the robot is reading a heading on the course and that heading is not the correct heading
-    while (RPS.Heading() > (heading + DEGREE_TOLERANCE) || RPS.Heading() < (heading - DEGREE_TOLERANCE) && RPSIsWorking() && (TimeNow() - timeout) < SECONDS_TIMEOUT)
+    float startTime = TimeNow();
+    while (RPS.Heading() > (heading + DEGREE_TOLERANCE) || RPS.Heading() < (heading - DEGREE_TOLERANCE) && RPSIsWorking() && (TimeNow() - startTime) < SECONDS_TIMEOUT)
     {
         if(RPS.Heading() > heading) {
             // If we should turn clockwise, do that

@@ -26,9 +26,6 @@ void printShaftEncoderValues () {
     while (true) {
         if ((left_encoder.Counts() != leftEncoderLast) || (right_encoder.Counts() != rightEncoderLast)) {
 
-            int leftEncoderLast = left_encoder.Counts();
-            int rightEncoderLast = right_encoder.Counts();
-
             LCD.Clear();
 
             LCD.Write("--> Left Encoder: ");

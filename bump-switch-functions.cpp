@@ -30,8 +30,6 @@ void DriveSkidFirstUntilHitWall(int motorPowerPercent)
         }
     }
 
-
-
     // Stops motors
     leftMotor.Stop();
     rightMotor.Stop();
