@@ -1,6 +1,14 @@
+/*
+ * exploration-two.cpp
+ * EXPLORATION TWO NAVIGATOR: Drives the CrayolaBot in a specified pattern using shaft encoders
+ * */
+
 #include "common.h"
 #include "shaft-encoders-drive-functions.h"
 
+/**
+ * @brief explorationTwoShaftEncoders: Drives the robot forward and executes a few right turns using shaft encoders
+ */
 void explorationTwoShaftEncoders () {
 
     // Garbage variables for touch screen

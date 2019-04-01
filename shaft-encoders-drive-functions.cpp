@@ -1,5 +1,13 @@
+/*
+ * shaft-encoders-drive-functions.cpp
+ * SHAFT ENCODING DRIVING FUNCTIONS: Drives the robot forward or turns it in place by distance.
+ * */
+
 #include "common.h"
 
+/**
+ * @brief printShaftEncoderValues: Prints out the encoder counts for testing purposes
+ */
 void printShaftEncoderValues () {
     //Reset encoder counts
     right_encoder.ResetCounts();
@@ -31,6 +39,13 @@ void printShaftEncoderValues () {
     }
 }
 
+/**
+ * @brief driveForInches: Drives the robot for a specific distance using shaft encoders
+ * @param skidFirst: Whether the robot will be driven skid first or wheels first
+ * @param inches: The distance to drive in inches
+ * @param motorPowerPercent: The level of power at which the motors should be driven
+ * @param leftMotorOffset: The percentage added or subtracted to the power from the left motor
+ */
 void driveForInches(bool skidFirst, double inches, int motorPowerPercent, float leftMotorOffset) //using encoders
 {
     //Reset encoder counts
@@ -99,6 +114,12 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent, float 
     LCD.WriteLine(right_encoder.Counts());
 }
 
+/**
+ * @brief turnCountsInPlace: Rotates the robot a certain number of degrees in place
+ * @param turnClockwise: Boolean whether the robot should turn clockwise or counterclockwise
+ * @param counts: The number of encoder counts (per encoder) that the robot should turn
+ * @param motorPowerPercent: The percentage at which the motors should be driven
+ */
 void turnCountsInPlace(bool turnClockwise, int counts, int motorPowerPercent) {
 
     //Reset encoder counts

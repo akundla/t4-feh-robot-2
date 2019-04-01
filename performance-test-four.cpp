@@ -1,3 +1,8 @@
+/*
+ * performance-test-four.cpp
+ * PERFORMANCE TEST FOUR NAVIGATOR:  See @brief for performanceTestFour()
+ * */
+
 #include "common.h"
 #include "cds-cell-functions.h"
 #include "shaft-encoders-drive-functions.h"
@@ -5,6 +10,14 @@
 #include "rps-functions.h"
 #include "bump-switch-functions.h"
 
+// TODO: Break out DDR functionality into its own method
+/**
+ * @brief performanceTestFour: Drives the robot to the DDR buttons, detects the color of the right light,
+ * drives the robot to the correct color button, presses the button, holds it, releases it, drives up the acrylic ramp,
+ * lines the robot up with the foosball counters, uses the arm to grab the counters, drags the counters to the other side of the bar,
+ * sweeps the bar to ensure that the counters made it to the other side, backs up, then drives over to the left wall,
+ * drives down the steep ramp, and hits the final button
+ */
 void performanceTestFour() {
 
     // Flag to make it go to blue
@@ -125,7 +138,6 @@ void performanceTestFour() {
     }
     // Otherwise the light is blue
     else {
-        // TODO: Calibrate, it's definitely more than 5
         const double inchesToBlueButton = 8.0;
 
         //check robot heading
@@ -171,7 +183,7 @@ void performanceTestFour() {
     const double xTopOfSteepRamp = 10;
     const double yTopOfSteepRamp = 45;
 
-    // TODO: Find point at top of acrylic ramp for adjustment
+    // Point at top of acrylic ramp for adjustment
     const double xPosition = 30;
     const double yPosition = 53.5;
 
@@ -261,12 +273,6 @@ void performanceTestFour() {
 
         // Wait after turning
         Sleep(1.0);
-
-        // TODO: Make constant
-        // lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
-
-        // Wait after turning
-        //Sleep(1.0);
 
         upper_servo.SetDegree(170);
 

@@ -1,125 +1,116 @@
-//#include "common.h"
-//#include "cds-cell-functions.h"
-//#include "shaft-encoders-drive-functions.h"
-//#include "rps-functions.h"
+/*
+ * performance-test-three.cpp
+ * PERFORMANCE TEST THREE NAVIGATOR: See @brief for performanceTestThree()
+ * */
 
-//// Rotates the servo arm to drop the coin into the slot
-//void dropCoin() {
-//    const double SECONDS_TO_WAIT = 1.5;
+#include "common.h"
+#include "cds-cell-functions.h"
+#include "shaft-encoders-drive-functions.h"
+#include "rps-functions.h"
+#include "other-functions.h"
 
-//    // Rotates lower servo to put the arm in position
-//    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
+/**
+ * @brief performanceTestThree: Navigates the robot up the steep ramp using shaft encoding,
+ * drives the robot to the coin slot using shaft encoding and RPS, drops the coin,
+ * drives to the lever, and flips the lever.
+ */
+void performanceTestThree() {
 
-//    Sleep(SECONDS_TO_WAIT);
+    //Number of counts for 45 degree turn at beginning
+    const double InitialTurn = 11;
+    const double InchesUpRamp = 31.5;
+    const double InchesToCoin = 6.0;
+    const double InchesToCoinSlot = 2;
 
-//    // Rotates upper servo to drop coin
-//    upper_servo.SetDegree(UPPER_DEGREE_VERTICAL_DOWN);
+    // Set arm servos to initial position
+    lower_servo.SetDegree(15);
+    upper_servo.SetDegree(140);
 
-//    Sleep(SECONDS_TO_WAIT);
+    float x, y;
+    LCD.WriteLine("Performance Test 3");
+    LCD.WriteLine("Set the arm to the correct position you robot champion!");
+    LCD.WriteLine("Then touch the screen to continue");
+    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
+    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
 
-//    // Rotates lower servo to put the arm in position
-//    lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT - 120);
+    //Choose which course for RPS
+    RPS.InitializeTouchMenu();
 
-//    Sleep(SECONDS_TO_WAIT);
-//}
+    //Wait for light
+    waitForStartLight();
 
-//void performanceTestThree() {
+    //Turns robot counterclockwise 45 degrees to alight with steep ramp
+    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn, TURN_POWER);
 
-//    //Number of counts for 45 degree turn at beginning
-//    const double InitialTurn = 11;
-//    const double InchesUpRamp = 31.5;
-//    const double InchesToCoin = 6.0;
-//    const double InchesToCoinSlot = 2;
+    //verify robot is facing in the positive y direction
+    check_heading(SKIDS_COURSE_TOP);
 
-//    // Set arm servos to initial position
-//    lower_servo.SetDegree(15);
-//    upper_servo.SetDegree(140);
+    //Drive robot to top of ramp
+    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER * 1.30, LEFT_MOTOR_OFFSET);
 
-//    float x, y;
-//    LCD.WriteLine("Performance Test 3");
-//    LCD.WriteLine("Set the arm to the correct position you robot champion!");
-//    LCD.WriteLine("Then touch the screen to continue");
-//    while(!LCD.Touch(&x,&y)); //Wait for screen to be pressed
-//    while(LCD.Touch(&x,&y)); //Wait for screen to be unpressed
+    // Align 90 degrees
+    check_heading(SKIDS_COURSE_TOP);
 
-//    //Choose which course for RPS
-//    RPS.InitializeTouchMenu();
+    //Verify Position with RPS
+    check_y_plus(46.0);
 
-//    //Wait for light
-//    waitForStartLight();
+    //Turn 90 degrees clockwise
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
 
-//    //Turns robot counterclockwise 45 degrees to alight with steep ramp
-//    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn, TURN_POWER);
+    //Check turn with RPS
+    check_heading(SKIDS_COURSE_RIGHT);
 
-//    //verify robot is facing in the positive y direction
-//    check_heading(SKIDS_COURSE_TOP);
+    //Drive to be be aligned with coin slot on the side
+    driveForInches(SKID_FIRST, InchesToCoin, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-//    //Drive robot to top of ramp
-//    driveForInches(SKID_FIRST, InchesUpRamp, DRIVE_POWER * 1.30);
+    // Check that the robot made it to the coin slot
+    check_x_plus(19.0);
 
-//    // Align 90 degrees
-//    check_heading(SKIDS_COURSE_TOP);
+    //Turn to align arm
+    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn*1.7, TURN_POWER);
 
-//    //Verify Position with RPS
-//    check_y_plus(46.0);
+    //Check turn with RPS
+    check_heading(SKIDS_COURSE_TOP);
 
-//    //Turn 90 degrees clockwise
-//    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
+    //Drive to be be aligned with coin slot on the side
+    driveForInches(WHEELS_FIRST, InchesToCoinSlot, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-//    //Check turn with RPS
-//    check_heading(SKIDS_COURSE_RIGHT);
+    // Turns the servos to drop the coin
+    dropCoin();
 
-//    //Drive to be be aligned with coin slot on the side
-//    driveForInches(SKID_FIRST, InchesToCoin, DRIVE_POWER);
+    // Back away from the slot
+    driveForInches(SKID_FIRST, 2.0 * InchesToCoinSlot, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-//    // Check that the robot made it to the coin slot
-//    check_x_plus(19.0);
+    // Turn clockwise to drive wheels-first back to the top of the ramp
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
 
-//    //Turn to align arm
-//    turnCountsInPlace(COUNTER_CLOCKWISE, InitialTurn*1.7, TURN_POWER);
+    // Check that the wheels face the left wall
+    check_heading(WHEELS_COURSE_LEFT);
 
-//    //Check turn with RPS
-//    check_heading(SKIDS_COURSE_TOP);
+    //Drive to be be aligned with the lever horizontally
+    driveForInches(WHEELS_FIRST, InchesToCoin, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-//    //Drive to be be aligned with coin slot on the side
-//    driveForInches(WHEELS_FIRST, InchesToCoinSlot, DRIVE_POWER);
+    // Turn to face the lever
+    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
 
-//    // Turns the servos to drop the coin
-//    dropCoin();
+    // Check that the wheels face the lever
+    check_heading(WHEELS_COURSE_TOP);
 
-//    // Back away from the slot
-//    driveForInches(SKID_FIRST, 2.0 * InchesToCoinSlot, DRIVE_POWER);
+    // Prepare arm to hit lever
+    lower_servo.SetDegree(175);
+    upper_servo.SetDegree(60);
 
-//    // Turn clockwise to drive wheels-first back to the top of the ramp
-//    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
+    Sleep(0.4);
 
-//    // Check that the wheels face the left wall
-//    check_heading(WHEELS_COURSE_LEFT);
+    //Drive to be be aligned with the lever
+    driveForInches(WHEELS_FIRST, 9.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-//    //Drive to be be aligned with the lever horizontally
-//    driveForInches(WHEELS_FIRST, InchesToCoin, DRIVE_POWER);
+    //Turn counter-clockwise to angle arm better relative to lever
+    turnCountsInPlace(COUNTER_CLOCKWISE, 4, TURN_POWER);
 
-//    // Turn to face the lever
-//    turnCountsInPlace(CLOCKWISE, InitialTurn*2.0, TURN_POWER);
+    //Drive toward lever
+    driveForInches(WHEELS_FIRST, 3.35, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-//    // Check that the wheels face the lever
-//    check_heading(WHEELS_COURSE_TOP);
-
-//    // Prepare arm to hit lever
-//    lower_servo.SetDegree(175);
-//    upper_servo.SetDegree(60);
-
-//    Sleep(0.4);
-
-//    //Drive to be be aligned with the lever
-//    driveForInches(WHEELS_FIRST, 9.5, DRIVE_POWER);
-
-//    //Turn counter-clockwise to angle arm better relative to lever
-//    turnCountsInPlace(COUNTER_CLOCKWISE, 4, TURN_POWER);
-
-//    //Drive toward lever
-//    driveForInches(WHEELS_FIRST, 3.35, DRIVE_POWER);
-
-//    // Whack that lever
-//    lower_servo.SetDegree(20);
-//}
+    // Whack that lever
+    lower_servo.SetDegree(20);
+}

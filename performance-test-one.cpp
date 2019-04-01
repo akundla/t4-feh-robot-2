@@ -1,9 +1,14 @@
+/*
+ * performance-test-one.cpp
+ * PERFORMANCE TEST ONE: Navigates the robot up the steep ramp and flips the lever, relying entirely on timing.
+ * */
+
 #include "common.h"
 #include "cds-cell-functions.h"
 #include "time-drive-functions.h"
 
-/*
- * Navigates through the course to complete the first performance test.
+/**
+ * @brief performanceTestOne: Navigates through the course to complete the first performance test.
  * This function first moves the servo motor into the 120 degree position,
  * at which point it prompts the user to rotate the arm to the correct
  * position so that when the servo is set to 0 degrees, the arm will hit

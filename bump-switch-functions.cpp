@@ -1,6 +1,12 @@
+/*
+ * bump-switch-functions.cpp
+ * BUMP SWITCH DRIVE FUNCTIONS
+ * Drive the robot into walls usubg bump switches: Used for CrayolaBots and for the team's robot
+ * */
+
 #include "common.h"
 
-//Create a function to drive motors forward until microswitch is pressed.
+// Drives the robot skid first into a wall, then squares the robot with that wall
 void DriveSkidFirstUntilHitWall(int motorPowerPercent)
 {
     //Turn both motors on at given percent motor power.
@@ -13,7 +19,7 @@ void DriveSkidFirstUntilHitWall(int motorPowerPercent)
     // Note that bump switches are "true" when not pressed and "false" when pressed
     float timeout = TimeNow();
     while (skidServoCornerBump.Value() == 1 || skidNonServoCornerBump.Value() == 1  && ((TimeNow() - timeout) < SECONDS_TIMEOUT)) {
-        LCD.WriteLine("BUMP SWITCHES NOT PRESSED");
+        LCD.WriteLine("Driving with Bump Switches");
 
         if (skidServoCornerBump.Value() == 0)  {
             rightMotor.Stop();
@@ -32,7 +38,7 @@ void DriveSkidFirstUntilHitWall(int motorPowerPercent)
 
 }
 
-// TODO: fix to account for new bump switch configuration
+// NOTE: This was only useful on the CrayolaBots, not for the team's robot.
 // Function to reverse the robot to the left until a wall is hit
 void BackLeftTurnUntilHitWall()
 {
@@ -49,7 +55,7 @@ void BackLeftTurnUntilHitWall()
     rightMotor.Stop();
 }
 
-// TODO: fix to account for new bump switch configuration
+// NOTE: This was only useful on the CrayolaBots, not for the team's robot.
 // Function to reverse the robot back to the right until one switch hits a wall
 void BackRightTurnUntilCornerHitWall()
 {

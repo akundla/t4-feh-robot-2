@@ -1,3 +1,8 @@
+/*
+ * common.h
+ * FULL PROGRAM HEADER FILE: Defines all constants and declares global variables for hardware
+ * */
+
 #ifndef COMMON_H
 #define COMMON_H
 

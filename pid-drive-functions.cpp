@@ -1,3 +1,12 @@
+/*
+ * pid-drive-functions.cpp
+ * PID DRIVE FUNCTIONS: Uses Proportional, Integral, Derivative to try to make the robot drive straight using Calculus on
+ * shaft encoder values.
+ * NOTE: This implementation of PID does not make the team's robot drive straight.
+ * It makes the robot drive to the right when driven skid-first. Changing the P I and D constants
+ * doesn't seem to make the robot go straight.
+ * */
+
 #include "common.h"
 #include "FEHSD.h"
 
@@ -46,7 +55,7 @@ void resetPIDVariables() {
     Sleep(TIME_TO_SLEEP);
 }
 
-//The function used to do PID control for the left motor
+// The function used to do PID control for the left motor
 float leftMotorPIDAdjustment(float expectedSpeed) {
     int changeInCounts = left_encoder.Counts() - leftPastCounts;
     float changeInTime = TimeNow() - leftPastTime;
@@ -95,7 +104,7 @@ float leftMotorPIDAdjustment(float expectedSpeed) {
     return leftMotorPower;
 }
 
-//The function used to do PID control for the right motor
+// The function used to do PID control for the right motor
 float rightMotorPIDAdjustment(float expectedSpeed) {
     int changeInCounts = right_encoder.Counts() - rightPastCounts;
     float changeInTime = TimeNow() - rightPastTime;
@@ -144,7 +153,8 @@ float rightMotorPIDAdjustment(float expectedSpeed) {
     return rightMotorPower;
 }
 
-// PID function for driving. Repeatedly calls
+// Attempts to drive the robot straight using the PID function. Repeatedly calls adjust PID on
+// the left and right motor every specified time interval
 void driveForInchesPID(bool skidFirst, double inches, float inchesPerSecond) {
 
     resetPIDVariables();

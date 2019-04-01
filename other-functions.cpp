@@ -1,3 +1,8 @@
+/*
+ * other-functions.cpp
+ * OTHER FUNCTIONS: Catch-all for functions that don't fit anywhere else.
+ * */
+
 #include "common.h"
 #include "cds-cell-functions.h"
 
@@ -27,6 +32,7 @@ void setupServos() {
     upper_servo.SetDegree(172);
 }
 
+// Prepares the robot to run on the course
 void prepareToLaunch() {
     calibrateServos();
     setupServos();
@@ -39,10 +45,13 @@ void prepareToLaunch() {
     //Choose which course for RPS
     RPS.InitializeTouchMenu();
 
+    // TODO: Wait for a bump switch to be pressed as the final action
+
     //Wait for light
     waitForStartLight();
 }
 
+// Moves the arm to drop the coin into the slot
 void dropCoin() {
     const double SECONDS_TO_WAIT = 1.0;
 
@@ -60,4 +69,33 @@ void dropCoin() {
     lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT - 120);
 
     Sleep(SECONDS_TO_WAIT);
+}
+
+// Moves the arm back and forth to ensure it functions correctly
+void testArm() {
+    calibrateServos();
+
+    setupServos();
+
+    Sleep(1.5);
+
+    waitForTouch();
+
+    dropCoin();
+
+    upper_servo.SetDegree(0);
+
+    lower_servo.SetDegree(180);
+
+    Sleep(1.5);
+
+    lower_servo.SetDegree(0);
+
+    Sleep(1.5);
+
+    lower_servo.SetDegree(180);
+
+    Sleep(1.5);
+
+    lower_servo.SetDegree(0);
 }

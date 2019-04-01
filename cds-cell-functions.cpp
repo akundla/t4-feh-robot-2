@@ -1,5 +1,24 @@
+/*
+ * cds-cell-functions.cpp
+ * CDS CELL FUNCTIONS
+ * All functionality that has to do with the CdS cell and its light detection
+ *
+ * */
 #include "common.h"
 
+// Determines whether the CdS cell sees a certain light color
+bool detectLight(double lightVoltage) {
+    return (cdsCell.Value() < lightVoltage + MoE && cdsCell.Value() > lightVoltage - MoE);
+}
+
+// Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red
+void waitForStartLight() {
+    while (cdsCell.Value() > RED_LIGHT_RED_F_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_RED_F_V_AVG - MoE) {
+        LCD.WriteLine(cdsCell.Value());
+    }
+}
+
+// Self-explanatory function for data gathering
 void printCDsCellValues() {
     // Runs continuously
     while(true) {
@@ -12,7 +31,7 @@ void printCDsCellValues() {
     }
 }
 
-// Runs continuously and prints to the screen if the CDS cell detects blue light
+// Runs continuously and prints to the screen if the CDS cell detects blue light: A requirement for Performance test 2
 void detectBlueLight() {
 
     // Acceptable margin of error (+/-) in voltage value (determines window in which light can be detected)
@@ -26,18 +45,7 @@ void detectBlueLight() {
     }
 }
 
-bool detectLight(double lightVoltage) {
-    return (cdsCell.Value() < lightVoltage + MoE && cdsCell.Value() > lightVoltage - MoE);
-}
-
-void waitForStartLight () {
-
-    // Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red
-    while (cdsCell.Value() > RED_LIGHT_RED_F_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_RED_F_V_AVG - MoE) {
-        LCD.WriteLine(cdsCell.Value());
-    }
-}
-
+// NOTE: This is only used in the exploration
 // Turns a servo motor in response to the reading from a CDS light cell
 void moveServoToLight() {
     // Runs continuously

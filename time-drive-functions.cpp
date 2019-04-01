@@ -1,7 +1,12 @@
+/*
+ * time-drive-functions.cpp
+ * TIME DRIVE FUNCTIONS: Drives the robot forward or turns it in place for a given number of seconds.
+ * */
+
 #include "common.h"
 
 /**
- *  driveForSeconds: Drives the robot in a straight line. Can drive the
+ *  @brief driveForSeconds: Drives the robot in a straight line. Can drive the
  *  robot either skids first or wheels first, for any duration of time
  *  and motor power percentage.
  *
@@ -40,6 +45,12 @@ void driveForSeconds(bool skidFirst, double seconds, int motorPowerPercent) {
     rightMotor.Stop();
 }
 
+/**
+ * @brief turnInPlace: Rotates the robot a certain number of degrees in place
+ * @param turnClockwise: Boolean whether the robot should turn clockwise or counterclockwise
+ * @param seconds: The number of seconds for which the robot should turn
+ * @param motorPowerPercent: The percentage at which the motors should be driven
+ */
 void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
     LCD.WriteLine("Turning around");
 
@@ -70,7 +81,7 @@ void turnInPlace(bool turnClockwise, double seconds, int motorPowerPercent) {
     rightMotor.Stop();
 }
 
-// PREDEFINED COMBINATION FUNCTIONS
+// PREDEFINED COMBINATION FUNCTIONS for Performance test 1
 // Turns the robot about 180 degrees clockwise at the top of the ramp
 void turnAround() {
     const double secondsToTurn = 3.30;

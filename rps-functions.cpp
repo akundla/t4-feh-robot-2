@@ -1,7 +1,12 @@
+/*
+ * rps-functions.cpp
+ * RPS FUNCTIONS: Adjusts the robot into specific RPS coordinates.
+ * */
+
 #include "common.h"
 #include "shaft-encoders-drive-functions.h"
 
-// Prints the RPS coordinates
+// Prints the RPS coordinates of the robot
 void printRPSLocation() {
     float touch_x, touch_y;
 
@@ -30,6 +35,7 @@ void printRPSLocation() {
     //we will never get here because of the infinite while loop
 }
 
+// Moves the robot into a specified x-coordinate
 void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direction
 {
     //check whether the robot is within an acceptable range
@@ -64,7 +70,7 @@ void check_x_plus(float x_coordinate) //using RPS while robot is in the +x direc
     }
 }
 
-
+// Moves the robot to a specific y-coordinate
 void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direction
 {
     //check whether the robot is within an acceptable range
@@ -99,7 +105,7 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
     }
 }
 
-
+// Helper function that determines whether the robot is in the dead zone or otherwise non-functioning
 bool RPSIsWorking () {
 
     if (RPS.Heading() != -1 && RPS.Heading() != -2) {
@@ -114,6 +120,7 @@ bool RPSIsWorking () {
 
 }
 
+// Moves the robot into a specific heading.
 void check_heading(float heading) //using RPS
 {
     // The current timeout
