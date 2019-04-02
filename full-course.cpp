@@ -23,18 +23,18 @@ void navigateFullCourse() {
     const double InitialTurn = 11;
     const double InchesUpRamp = 31.5;
     const double InchesToCoin = 6.6;
-    const double InchesToCoinSlot = 2;
+    const double InchesToCoinSlot = 2.75;
     const float rampPower = DRIVE_POWER * 1.55;
     const float yTopOfShortRamp = 46.0;
     const int ticksIn90DegreeTurn = 22;
-    const float xCoinSlot = 18.25;
+    const float xCoinSlot = 18.15;
     const int ticksToLineUpWithCoinSlot = 22;
     const double inchesToLever = 9.0;
     const int ticksFinalTurnForLever = 7;
     const double finalInchesToLever = 3.35;
     // TODO: Calibrate to the arm skips as few teeth as possible
-    const int lowerDegreeToHitLever = 80;
-     const float degreeToHitCountersWall = 25; //TODO: Old value was 10, needs to be calibrated a bit
+    const int lowerDegreeToHitLever = 100;
+     const float degreeToHitCountersWall = 10; //TODO: Old value was 10, needs to be calibrated a bit
      const double countersDistance = 9.5;
 
     LCD.WriteLine("Full Course Navigator");
@@ -57,7 +57,7 @@ void navigateFullCourse() {
     check_y_plus(yTopOfShortRamp);
 
     //Turn 90 degrees clockwise
-    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn+1, TURN_POWER);
 
     //Check turn with RPS
     check_heading(SKIDS_COURSE_RIGHT);
@@ -85,7 +85,7 @@ void navigateFullCourse() {
     dropCoin();
 
     // Back away from the slot
-    driveForInches(SKID_FIRST, 2.0 * InchesToCoinSlot, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    driveForInches(SKID_FIRST, 2.0 * (InchesToCoinSlot - 0.75), DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     // Turn clockwise to drive wheels-first back to the top of the ramp
     turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
@@ -97,7 +97,7 @@ void navigateFullCourse() {
     driveForInches(WHEELS_FIRST, InchesToCoin + 0.4, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     // Turn to face the lever
-    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn+1, TURN_POWER);
 
     //RPS Sleep and check
     Sleep(RPS_SLEEP_SECONDS);
@@ -109,7 +109,7 @@ void navigateFullCourse() {
     lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT+10);
     upper_servo.SetDegree(15);
     // Wait for servos to finish moving
-    Sleep(RPS_SLEEP_SECONDS);
+    Sleep(RPS_SLEEP_SECONDS+0.1);
 
     //check y position
     check_y_plus(44.1);
@@ -118,7 +118,7 @@ void navigateFullCourse() {
     driveForInches(WHEELS_FIRST, inchesToLever, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     //Turn counter-clockwise to angle arm better relative to lever
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksFinalTurnForLever, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksFinalTurnForLever +1, TURN_POWER);
 
     Sleep(0.2);
 
@@ -151,7 +151,7 @@ void navigateFullCourse() {
     driveForInches(SKID_FIRST, 9.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     // skids face right wall
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn+1, TURN_POWER);
 
     check_heading(SKIDS_COURSE_RIGHT);
 
@@ -175,7 +175,7 @@ void navigateFullCourse() {
     check_heading(WHEELS_COURSE_TOP);
 
     // TODO: Maybe adjust if you have issues
-    lower_servo.SetDegree(179);
+    lower_servo.SetDegree(168);
 
     Sleep(RPS_SLEEP_SECONDS);
 
@@ -226,7 +226,7 @@ void navigateFullCourse() {
         Sleep(0.5);
     } else {
         // Drive forward dragging the counters along
-        driveForInches(WHEELS_FIRST, (countersDistance * 2.0/3.0) + 2.0, DRIVE_POWER / 2.0, 0.035);
+        driveForInches(WHEELS_FIRST, (countersDistance * 2.0/3.0) + 2.0, DRIVE_POWER / 2.0, 0.050/2); //old value 0.035
 
         // Wait after turning
         Sleep(0.5);
@@ -236,7 +236,7 @@ void navigateFullCourse() {
         Sleep(0.5);
 
         // Drive backward dragging the counters along
-        driveForInches(SKID_FIRST, 3.0, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
+        driveForInches(SKID_FIRST, 3, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
 
         Sleep(0.5);
 
@@ -245,7 +245,7 @@ void navigateFullCourse() {
         Sleep(0.5);
 
         // Drive forward dragging the counters along
-        driveForInches(WHEELS_FIRST, 3.5, DRIVE_POWER / 2.0, 0.035);
+        driveForInches(WHEELS_FIRST, 3.5, DRIVE_POWER / 2.0, 0.050/2);
 
         Sleep(0.5);
 
@@ -283,7 +283,7 @@ void navigateFullCourse() {
     const float yTopOfLongRamp = 52.0;
     const double inchesUpAcrylicRamp = 34;
     // TODO: Completely uncalibrated
-    const double xRightLight = 27.12;
+    const double xRightLight = 26.00;
     const double xLeftButton = 21.25;
     const double yDDRLight = 13.5;
 
@@ -294,7 +294,7 @@ void navigateFullCourse() {
     if (skidFirstDownRamp) {
         // Rotate robot to be ready for skids first down the ramp
         Sleep(RPS_SLEEP_SECONDS);
-        check_heading(SKIDS_COURSE_BOTTOM+6);
+        check_heading(SKIDS_COURSE_BOTTOM+4);
         // Check for being vertically down
 
         // Drive down ramp
@@ -311,6 +311,8 @@ void navigateFullCourse() {
         check_x_plus(xRightLight);
 
         turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
+
+        Sleep(RPS_SLEEP_SECONDS);
 
         check_heading(SKIDS_COURSE_BOTTOM);
 
@@ -377,7 +379,7 @@ void navigateFullCourse() {
         turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn, DRIVE_POWER);
 
         // 8 Inches is virtually perfect
-        const double inchesToDriveToButton = 10;
+        const double inchesToDriveToButton = 12.5;
 
         //Drive back to start
         driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER, LEFT_MOTOR_OFFSET);
@@ -410,7 +412,6 @@ void navigateFullCourse() {
 
     //Turn Clockwise about 45 degrees to face end button
     turnCountsInPlace(COUNTER_CLOCKWISE, countsToTurn, TURN_POWER);
-
     // hit final button
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
 }
