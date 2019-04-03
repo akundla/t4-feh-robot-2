@@ -292,7 +292,7 @@ void navigateFullCourse() {
 
         // Drive down ramp
         const double inchesDownAcrylicRamp = inchesUpAcrylicRamp + 3.75;
-        driveForInches(SKID_FIRST, inchesDownAcrylicRamp, DRIVE_POWER + 20, -0.055);
+        driveForInches(SKID_FIRST, inchesDownAcrylicRamp, DRIVE_POWER + 17, -0.055);
 
         //check and sleep
         Sleep(RPS_SLEEP_SECONDS);

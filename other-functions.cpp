@@ -46,8 +46,8 @@ void waitForSkidServoBumpSwitchPress() {
 void setRPSCoordinates() {
 
     // Detects, records, and saves current RPS coordinates
-    startX = RPS.X();
-    startY = RPS.Y();
+    float startX = RPS.X();
+    float startY = RPS.Y();
 
     // Calculates and sets all location coordinates
     yTopOfShortRamp = Y_TOP_OF_SHORT_RAMP - AVG_START_Y + startY;
@@ -76,6 +76,8 @@ void prepareToLaunch() {
 
     // Wait for a bump switch to be pressed as the final action
     waitForSkidServoBumpSwitchPress();
+    // Sets all the coordinates
+    setRPSCoordinates();
 
     //Wait for light
     waitForStartLight();
