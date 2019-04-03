@@ -42,6 +42,23 @@ void waitForSkidServoBumpSwitchPress() {
     }
 }
 
+// Calculates and sets all RPS Coordinates based on the starting coordinate
+void setRPSCoordinates() {
+
+    // Detects, records, and saves current RPS coordinates
+    startX = RPS.X();
+    startY = RPS.Y();
+
+    // Calculates and sets all location coordinates
+    yTopOfShortRamp = Y_TOP_OF_SHORT_RAMP - AVG_START_Y + startY;
+    xCoinSlot = X_COIN_SLOT - AVG_START_X + startX;
+    yBeforeLever = Y_BEFORE_LEVER - AVG_START_Y + startY;
+    yTopAcrylicRamp = Y_TOP_ACRYLIC_RAMP - AVG_START_Y + startY;
+    xLeftLight = X_LEFT_LIGHT - AVG_START_X + startX;
+    xRightLight = X_RIGHT_LIGHT - AVG_START_X + startX;
+    yDDRLights = Y_DDR_LIGHTS - AVG_START_Y + startY;
+}
+
 // Prepares the robot to run on the course
 void prepareToLaunch() {
     calibrateServos();
@@ -55,7 +72,7 @@ void prepareToLaunch() {
     //Choose which course for RPS
     RPS.InitializeTouchMenu();
 
-    LCD.WriteLine("Press and release the servo-side bump switch to start reading the light");
+    LCD.WriteLine("Press and release the servo-side bump switch to record the starting RPS coordinates and start reading the light");
 
     // Wait for a bump switch to be pressed as the final action
     waitForSkidServoBumpSwitchPress();

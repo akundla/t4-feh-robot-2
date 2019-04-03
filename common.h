@@ -112,6 +112,20 @@
 #define RIGHT_DARK_BACKGROUND 2.028
 #define RIGHT_BLACK 2.434
 
+// Average starting RPS X and Y coordinates from 208
+#define AVG_START_X 8.925
+#define AVG_START_Y 11.575
+
+#define Y_TOP_OF_SHORT_RAMP 46.0
+#define X_COIN_SLOT 18.15
+
+#define Y_BEFORE_LEVER 44.1
+
+#define Y_TOP_ACRYLIC_RAMP 52.0
+
+#define X_LEFT_LIGHT 21.25
+#define X_RIGHT_LIGHT 26.0
+#define Y_DDR_LIGHTS 13.5
 
 // OTHER
 // Ratio that a CDS cell reading is multiplied by to create a degree (0 - 180) to which to move the servo
@@ -133,5 +147,17 @@ extern FEHServo upper_servo;
 
 extern DigitalInputPin skidServoCornerBump;
 extern DigitalInputPin skidNonServoCornerBump;
+
+// RPS Coordinates of the starting position
+extern float startX;
+extern float startY;
+
+extern float yTopOfShortRamp;
+extern float xCoinSlot;
+extern float yBeforeLever;
+extern float yTopAcrylicRamp;
+extern float xLeftLight;
+extern float xRightLight;
+extern float yDDRLights;
 
 #endif // COMMON_H

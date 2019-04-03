@@ -25,9 +25,7 @@ void navigateFullCourse() {
     const double InchesToCoin = 6.6;
     const double InchesToCoinSlot = 2.75;
     const float rampPower = DRIVE_POWER * 1.55;
-    const float yTopOfShortRamp = 46.0;
     const int ticksIn90DegreeTurn = 22;
-    const float xCoinSlot = 18.15;
     const int ticksToLineUpWithCoinSlot = 22;
     const double inchesToLever = 9.0;
     const int ticksFinalTurnForLever = 7;
@@ -112,7 +110,7 @@ void navigateFullCourse() {
     Sleep(RPS_SLEEP_SECONDS+0.1);
 
     //check y position
-    check_y_plus(44.1);
+    check_y_plus(yBeforeLever);
 
     //Drive to be be aligned with the lever
     driveForInches(WHEELS_FIRST, inchesToLever, DRIVE_POWER, LEFT_MOTOR_OFFSET);
@@ -280,15 +278,10 @@ void navigateFullCourse() {
     // UNTESTED CODE RESUMES HERE
     bool skidFirstDownRamp = true;
 
-    const float yTopOfLongRamp = 52.0;
     const double inchesUpAcrylicRamp = 34;
-    // TODO: Completely uncalibrated
-    const double xRightLight = 26.00;
-    const double xLeftButton = 21.25;
-    const double yDDRLight = 13.5;
 
     // TODO: Eliminate for time if we can line up with DDR button without it
-    //check_y_plus(yTopOfLongRamp);
+    //check_y_plus(yTopAcrylicRamp);
 
 
     if (skidFirstDownRamp) {
@@ -303,7 +296,7 @@ void navigateFullCourse() {
 
         //check and sleep
         Sleep(RPS_SLEEP_SECONDS);
-        check_y_plus(yDDRLight);
+        check_y_plus(yDDRLights);
         check_heading(SKIDS_COURSE_BOTTOM);
 
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
@@ -318,7 +311,7 @@ void navigateFullCourse() {
 
         Sleep(RPS_SLEEP_SECONDS);
 
-        check_y_plus(yDDRLight);
+        check_y_plus(yDDRLights);
 
     } else {
         check_heading(WHEELS_COURSE_BOTTOM);
@@ -330,7 +323,7 @@ void navigateFullCourse() {
     }
 
     // Detects chosen light color
-    check_y_plus(yDDRLight);
+    check_y_plus(yDDRLights);
     bool IS_RED = false;
     if (detectLight(RED_LIGHT_RED_F_V_AVG))
     {
@@ -357,7 +350,7 @@ void navigateFullCourse() {
         // Drives the robot up to be level with the red button
         driveForInches(SKID_FIRST, inchesToRedButton, DRIVE_POWER / 2.0, LEFT_MOTOR_OFFSET);
 
-        check_x_plus(xLeftButton);
+        check_x_plus(xLeftLight);
 
         // Turn 90 degrees so the wheel-side of the robot faces the buttons
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
