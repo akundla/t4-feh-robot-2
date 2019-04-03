@@ -47,6 +47,15 @@ FEHServo upper_servo (FEHServo::Servo0);
 DigitalInputPin skidServoCornerBump (FEHIO::P3_7);
 DigitalInputPin skidNonServoCornerBump (FEHIO::P3_0);
 
+// RPS Coordinates
+float yTopOfShortRamp = 0.0;
+float xCoinSlot = 0.0;
+float yBeforeLever = 0.0;
+float yTopAcrylicRamp = 0.0;
+float xLeftLight = 0.0;
+float xRightLight = 0.0;
+float yDDRLights = 0.0;
+
 /*
  * Main function: Calls whatever other function the robot is to run.
  */

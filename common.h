@@ -123,7 +123,7 @@
 
 #define Y_TOP_ACRYLIC_RAMP 52.0
 
-#define X_LEFT_LIGHT 21.25
+#define X_LEFT_LIGHT 20.75
 #define X_RIGHT_LIGHT 26.0
 #define Y_DDR_LIGHTS 13.5
 
