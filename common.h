@@ -21,9 +21,9 @@
 // Power offset multiplied by the motor power and added to the left motor power to make the robot drive straight
 #define LEFT_MOTOR_OFFSET 0.025
 // Standard percentage of motor power for driving forwards or backwards
-#define DRIVE_POWER 42.0
+#define DRIVE_POWER 45.0//original is 42
 // Standard percentage of motor power for turning the robot in place
-#define TURN_POWER 20.0
+#define TURN_POWER 23.0 //original 20.0
 // Standard percentage for motor checking
 #define RPS_POWER 15.0
 #define RPS_SLEEP_SECONDS 0.5

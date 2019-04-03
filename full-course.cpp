@@ -24,7 +24,7 @@ void navigateFullCourse() {
     const double InchesUpRamp = 31.5;
     const double InchesToCoin = 6.6;
     const double InchesToCoinSlot = 2.75;
-    const float rampPower = DRIVE_POWER * 1.55;
+    const float rampPower = 42 * 1.55;
     const int ticksIn90DegreeTurn = 22;
     const int ticksToLineUpWithCoinSlot = 22;
     const double inchesToLever = 9.0;
@@ -273,7 +273,7 @@ void navigateFullCourse() {
     turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
     //drive up to acrylic ramp
-    driveForInches(SKID_FIRST, 3, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    driveForInches(SKID_FIRST, 2.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     // UNTESTED CODE RESUMES HERE
     bool skidFirstDownRamp = true;
@@ -291,7 +291,7 @@ void navigateFullCourse() {
         // Check for being vertically down
 
         // Drive down ramp
-        const double inchesDownAcrylicRamp = inchesUpAcrylicRamp + 4;
+        const double inchesDownAcrylicRamp = inchesUpAcrylicRamp + 3.75;
         driveForInches(SKID_FIRST, inchesDownAcrylicRamp, DRIVE_POWER + 20, -0.055);
 
         //check and sleep
@@ -336,9 +336,9 @@ void navigateFullCourse() {
     }
 
     if (IS_RED) {
-        const double inchesToRedButton = 6.25;
+        const double inchesToRedButton = 6.00;
 
-        driveForInches(SKID_FIRST, 1.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+        driveForInches(SKID_FIRST, 0.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
         // Turn 90 degrees so the wheel-side of the robot faces the right wall
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
@@ -356,8 +356,9 @@ void navigateFullCourse() {
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
 
         // Allows the robot to settle then checks the heading
+        Sleep(RPS_SLEEP_SECONDS+0.1);
         check_heading(WHEELS_COURSE_BOTTOM);
-        Sleep(RPS_SLEEP_SECONDS);
+
 
         // Drives the robot into the button
         driveForSeconds(WHEELS_FIRST, 3.0, (DRIVE_POWER / 3) + 10);
@@ -381,7 +382,7 @@ void navigateFullCourse() {
         // turn around to face button
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn * 2, TURN_POWER);
 
-        Sleep(RPS_SLEEP_SECONDS);
+        Sleep(RPS_SLEEP_SECONDS+0.1);
         check_heading(WHEELS_COURSE_BOTTOM);
 
 
