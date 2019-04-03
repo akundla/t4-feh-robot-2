@@ -383,7 +383,7 @@ void navigateFullCourse() {
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn * 2, TURN_POWER);
 
         Sleep(RPS_SLEEP_SECONDS+0.1);
-        check_heading(WHEELS_COURSE_BOTTOM);
+        check_heading(WHEELS_COURSE_BOTTOM+3);
 
 
         // Drives the robot into the blue button
