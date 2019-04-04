@@ -61,5 +61,9 @@ float yDDRLights = 0.0;
  */
 int main(void) {
 
-    navigateFullCourse();
+    prepareToLaunch();
+
+    driveForInches(SKID_FIRST, 12, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+
+    // navigateFullCourse();
 }

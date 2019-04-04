@@ -49,6 +49,10 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent, float 
     right_encoder.ResetCounts();
     left_encoder.ResetCounts();
 
+    int lastLeftCounts = 0;
+    int lastRightCounts = 0;
+    float timeBetweenStuckChecks = 0.25;
+    float lastTime = TimeNow();
 
 
     LCD.WriteLine("Driving for ");
@@ -86,12 +90,38 @@ void driveForInches(bool skidFirst, double inches, int motorPowerPercent, float 
         LCD.WriteLine(right_encoder.Counts());
         LCD.WriteLine("");
 
-        // The numebr of ticks that the left wheel has traveled more than the right wheel
-        int leftTicksDiff = left_encoder.Counts() - right_encoder.Counts();
+        // Checks if the wheels are stuck every half second and ramps up power if they are
+        if ((TimeNow() - lastTime) > timeBetweenStuckChecks) {
 
-        double rightMotorPowerAdjustment = (leftTicksDiff / TICKS_PER_REV) * rightMotorPowerPercent;
+            // If the left wheel is stuck
+            if (lastLeftCounts == left_encoder.Counts()) {
+                leftMotor.SetPercent(100);
+            } else {
+                leftMotor.SetPercent(leftMotorPowerPercent);
+            }
 
-        rightMotor.SetPercent(rightMotorPowerPercent + rightMotorPowerAdjustment);
+            // If the right wheel is stuck
+            if (lastLeftCounts == left_encoder.Counts()) {
+                leftMotor.SetPercent(100);
+            } else {
+                rightMotor.SetPercent(rightMotorPowerPercent);
+            }
+
+
+            // Saves time, counts
+            lastTime = TimeNow();
+            lastLeftCounts = left_encoder.Counts();
+            lastRightCounts - right_encoder.Counts();
+        } else {
+            // If wheels aren't stuck, performs normal power adjustment on right motor
+
+            // The numebr of ticks that the left wheel has traveled more than the right wheel
+            int leftTicksDiff = left_encoder.Counts() - right_encoder.Counts();
+
+            double rightMotorPowerAdjustment = (leftTicksDiff / TICKS_PER_REV) * rightMotorPowerPercent;
+
+            rightMotor.SetPercent(rightMotorPowerPercent + rightMotorPowerAdjustment);
+        }
     }
 
     //Turn off motors
