@@ -31,7 +31,7 @@ AnalogInputPin cdsCell (FEHIO::P0_0);
 
 // ENCODERS
 DigitalEncoder left_encoder(FEHIO::P1_7);
-DigitalEncoder right_encoder(FEHIO::P1_0);
+DigitalEncoder right_encoder(FEHIO::P3_1);
 
 // DRIVE MOTORS
 //Assign the right and left motors to motor ports with a max voltage of 9.0V
@@ -61,9 +61,5 @@ float yDDRLights = 0.0;
  */
 int main(void) {
 
-    prepareToLaunch();
-
-    driveForInches(SKID_FIRST, 12, DRIVE_POWER, LEFT_MOTOR_OFFSET);
-
-    // navigateFullCourse();
+    navigateFullCourse();
 }

@@ -14,7 +14,7 @@ bool detectLight(double lightVoltage) {
 // Runs (burns time, makes robot wait) while the cdsCell detects light that is not in the voltage range of Red
 void waitForStartLight() {
     float startTime = TimeNow();
-    while ((cdsCell.Value() > RED_LIGHT_RED_F_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_RED_F_V_AVG - MoE) && (TimeNow() - startTime) < SECONDS_TIMEOUT) {
+    while ((cdsCell.Value() > RED_LIGHT_RED_F_V_AVG + MoE || cdsCell.Value() < RED_LIGHT_RED_F_V_AVG - MoE) && (TimeNow() - startTime) < 20.0) {
         LCD.WriteLine(cdsCell.Value());
     }
 }

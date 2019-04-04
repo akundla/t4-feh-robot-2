@@ -38,7 +38,7 @@
 #define UPPER_SERVO_MAX 2370
 
 // Directions for dropping coin
-#define LOWER_DEGREE_STRAIGHT_OUT 170
+#define LOWER_DEGREE_STRAIGHT_OUT 175
 #define UPPER_DEGREE_VERTICAL_DOWN 60
 
 
@@ -62,7 +62,7 @@
 // The number of seconds the robot will attempt to calibrate for using RPS before giving up
 #define SECONDS_TIMEOUT 8.0
 // The number of degrees the robot can be off by on either side and still proceed forward
-#define DEGREE_TOLERANCE 4
+#define DEGREE_TOLERANCE 2
 
 // Used for checking heading
 #define SKIDS_COURSE_RIGHT 0
@@ -115,6 +115,8 @@
 // Average starting RPS X and Y coordinates from 208
 #define AVG_START_X 8.925
 #define AVG_START_Y 11.575
+
+#define RPS_TOLERANCE 0.5
 
 #define Y_TOP_OF_SHORT_RAMP 46.0
 #define X_COIN_SLOT 18.15
