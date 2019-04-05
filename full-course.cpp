@@ -21,7 +21,7 @@
 void navigateFullCourse() {
     //Number of counts for 45 degree turn at beginning
     const double InitialTurn = 11;
-    const double InchesUpRamp = 29.0; // was 31.5
+    const double InchesUpRamp = 28.5; // was 31.5
     const double InchesToCoin = 6.6;
     const double InchesToCoinSlot = 3.25;
     const float rampPower = 42 * 1.55;
@@ -169,7 +169,7 @@ void navigateFullCourse() {
     turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
 
     // Was plus two
-    check_heading(WHEELS_COURSE_TOP + 12.5);
+    check_heading(WHEELS_COURSE_TOP + 15);
 
     // TODO: Maybe adjust if you have issues
     lower_servo.SetDegree(180);
@@ -187,7 +187,8 @@ void navigateFullCourse() {
     DriveSkidFirstUntilHitWall(DRIVE_POWER * 1.15);
 
     // Rotate arm to hit counters back wall
-    turnCountsInPlace(CLOCKWISE, 2, TURN_POWER);
+    // TODO: Change back to 2 if this doesnt work
+    turnCountsInPlace(CLOCKWISE, 1, TURN_POWER);
 
     driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
 
@@ -358,6 +359,9 @@ void navigateFullCourse() {
         driveForInches(SKID_FIRST, inchesToDriveToButton, DRIVE_POWER, LEFT_MOTOR_OFFSET);
     }
     else {
+        // Drives the robot into the blue button
+        driveForSeconds(SKID_FIRST, INCHES_PER_TICK, (DRIVE_POWER / 3) + 10);
+
         // turn around to face button
         turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn * 2, TURN_POWER);
 

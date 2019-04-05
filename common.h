@@ -62,7 +62,7 @@
 // The number of seconds the robot will attempt to calibrate for using RPS before giving up
 #define SECONDS_TIMEOUT 8.0
 // The number of degrees the robot can be off by on either side and still proceed forward
-#define DEGREE_TOLERANCE 2
+#define DEGREE_TOLERANCE 4
 
 // Used for checking heading
 #define SKIDS_COURSE_RIGHT 0
