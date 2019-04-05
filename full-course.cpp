@@ -151,11 +151,11 @@ void navigateFullCourse() {
 
     check_heading(SKIDS_COURSE_RIGHT);
 
-    driveForInches(SKID_FIRST, 7.0, DRIVE_POWER, LEFT_MOTOR_OFFSET); // Was 6.0
+    driveForInches(SKID_FIRST, 6.25, DRIVE_POWER, LEFT_MOTOR_OFFSET); // Was 6.0
 
     turnCountsInPlace(COUNTER_CLOCKWISE, 9, TURN_POWER);
 
-    driveForInches(SKID_FIRST, 8.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    driveForInches(SKID_FIRST, 8.5, DRIVE_POWER * 1.5, LEFT_MOTOR_OFFSET);
 
     turnCountsInPlace(CLOCKWISE, 9, TURN_POWER);
 
@@ -168,7 +168,8 @@ void navigateFullCourse() {
     // FACE COUNTERS
     turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
 
-    check_heading(WHEELS_COURSE_TOP + 2);
+    // Was plus two
+    check_heading(WHEELS_COURSE_TOP + 12.5);
 
     // TODO: Maybe adjust if you have issues
     lower_servo.SetDegree(180);
@@ -178,7 +179,7 @@ void navigateFullCourse() {
     // Drive to counters
     driveForInches(WHEELS_FIRST, 11.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
-    // Rotate to be parallel to counters
+    // Rotate to be parallel to counters, was minus one
     turnCountsInPlace(COUNTER_CLOCKWISE, ticksIn90DegreeTurn-1, TURN_POWER);
 
     //Drive in +x direction to line up with wall
@@ -201,7 +202,8 @@ void navigateFullCourse() {
     // Wait after turning
     Sleep(0.5);
 
-    double counterOffset = -0.04;
+    // Got primaries at -0.04
+    double counterOffset = -0.055;
 
     // Drive forward dragging the counters along
     driveForInches(WHEELS_FIRST, (countersDistance * 2.0/3.0) + 2.0, DRIVE_POWER / 2.0, counterOffset); //old value 0.035
@@ -238,7 +240,7 @@ void navigateFullCourse() {
     driveForInches(SKID_FIRST, 3.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     //Turn to angle away from foosball counters
-    turnCountsInPlace(COUNTER_CLOCKWISE, 5, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, 7, TURN_POWER);
 
     //drive to right side wall of course
     DriveSkidFirstUntilHitWall(DRIVE_POWER);
