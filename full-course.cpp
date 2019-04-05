@@ -21,7 +21,7 @@
 void navigateFullCourse() {
     //Number of counts for 45 degree turn at beginning
     const double InitialTurn = 11;
-    const double InchesUpRamp = 28.5; // was 31.5
+    const double InchesUpRamp = 27.5; // was 31.5
     const double InchesToCoin = 6.6;
     const double InchesToCoinSlot = 3.25;
     const float rampPower = 42 * 1.55;
@@ -50,6 +50,8 @@ void navigateFullCourse() {
 
     // Align 90 degrees
     check_heading(SKIDS_COURSE_TOP);
+
+    Sleep(0.3);
 
     //Verify Position with RPS
     check_y_plus(yTopOfShortRamp);
@@ -82,8 +84,8 @@ void navigateFullCourse() {
     // Turns the servos to drop the coin
     dropCoin();
 
-    // Back away from the slot
-    driveForInches(SKID_FIRST, 2.0 * (InchesToCoinSlot - 0.75), DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    // Back away from the slot was // - 0.75
+    driveForInches(SKID_FIRST, 2.0 * (InchesToCoinSlot - 1.15), DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     // Turn clockwise to drive wheels-first back to the top of the ramp
     turnCountsInPlace(CLOCKWISE, ticksIn90DegreeTurn, TURN_POWER);
@@ -113,10 +115,10 @@ void navigateFullCourse() {
     check_y_plus(yBeforeLever);
 
     //Drive to be be aligned with the lever
-    driveForInches(WHEELS_FIRST, inchesToLever, DRIVE_POWER, LEFT_MOTOR_OFFSET);
+    driveForInches(WHEELS_FIRST, inchesToLever + INCHES_PER_TICK, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     //Turn counter-clockwise to angle arm better relative to lever
-    turnCountsInPlace(COUNTER_CLOCKWISE, ticksFinalTurnForLever + 3, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, ticksFinalTurnForLever + 1, TURN_POWER);
 
     Sleep(0.2);
 
@@ -138,10 +140,10 @@ void navigateFullCourse() {
     driveForInches(SKID_FIRST, 1.0, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     upper_servo.SetDegree(140);
-    lower_servo.SetDegree(15);
+    lower_servo.SetDegree(0);
     Sleep(0.4);
 
-    turnCountsInPlace(CLOCKWISE, ticksFinalTurnForLever, TURN_POWER);
+    turnCountsInPlace(CLOCKWISE, ticksFinalTurnForLever - 1, TURN_POWER);
 
     // Drive back to starting spot for lever
     driveForInches(SKID_FIRST, 10.0, DRIVE_POWER, LEFT_MOTOR_OFFSET); // WAS 9.5
@@ -151,7 +153,7 @@ void navigateFullCourse() {
 
     check_heading(SKIDS_COURSE_RIGHT);
 
-    driveForInches(SKID_FIRST, 6.25, DRIVE_POWER, LEFT_MOTOR_OFFSET); // Was 6.0
+    driveForInches(SKID_FIRST, 6.0, DRIVE_POWER, LEFT_MOTOR_OFFSET); // Was 6.0
 
     turnCountsInPlace(COUNTER_CLOCKWISE, 9, TURN_POWER);
 
@@ -169,7 +171,7 @@ void navigateFullCourse() {
     turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
 
     // Was plus two
-    check_heading(WHEELS_COURSE_TOP + 15);
+    check_heading(WHEELS_COURSE_TOP + 12);
 
     // TODO: Maybe adjust if you have issues
     lower_servo.SetDegree(180);
@@ -204,7 +206,7 @@ void navigateFullCourse() {
     Sleep(0.5);
 
     // Got primaries at -0.04
-    double counterOffset = -0.055;
+    double counterOffset = -0.06;
 
     // Drive forward dragging the counters along
     driveForInches(WHEELS_FIRST, (countersDistance * 2.0/3.0) + 2.0, DRIVE_POWER / 2.0, counterOffset); //old value 0.035
@@ -241,7 +243,7 @@ void navigateFullCourse() {
     driveForInches(SKID_FIRST, 3.5, DRIVE_POWER, LEFT_MOTOR_OFFSET);
 
     //Turn to angle away from foosball counters
-    turnCountsInPlace(COUNTER_CLOCKWISE, 7, TURN_POWER);
+    turnCountsInPlace(COUNTER_CLOCKWISE, 5, TURN_POWER);
 
     //drive to right side wall of course
     DriveSkidFirstUntilHitWall(DRIVE_POWER);

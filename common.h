@@ -119,7 +119,7 @@
 #define RPS_TOLERANCE 0.5
 
 #define Y_TOP_OF_SHORT_RAMP 46.0
-#define X_COIN_SLOT 18.15
+#define X_COIN_SLOT 17.75
 
 #define Y_BEFORE_LEVER 44.1
 
