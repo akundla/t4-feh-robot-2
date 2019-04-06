@@ -112,7 +112,7 @@ void navigateFullCourse() {
     Sleep(RPS_SLEEP_SECONDS+0.1);
 
     //check y position
-    check_y_plus(yBeforeLever);
+    check_y_plus_TIGHT(yBeforeLever);
 
     //Drive to be be aligned with the lever
     driveForInches(WHEELS_FIRST, inchesToLever + INCHES_PER_TICK, DRIVE_POWER, LEFT_MOTOR_OFFSET);
@@ -171,7 +171,7 @@ void navigateFullCourse() {
     turnCountsInPlace(CLOCKWISE, 22, TURN_POWER);
 
     // Was plus two
-    check_heading(WHEELS_COURSE_TOP + 12);
+    check_heading(WHEELS_COURSE_TOP + 9);
 
     // TODO: Maybe adjust if you have issues
     lower_servo.SetDegree(180);

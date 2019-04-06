@@ -107,6 +107,42 @@ void check_y_plus(float y_coordinate) //using RPS while robot is in the +y direc
     }
 }
 
+// Moves the robot to a specific y-coordinate
+void check_y_plus_TIGHT(float y_coordinate) //using RPS while robot is in the +y direction
+{
+    //check whether the robot is within an acceptable range
+    float startTime = TimeNow();
+    while(RPS.Y() < y_coordinate - 0.25 || RPS.Y() > y_coordinate + 0.25 && RPS.Heading() != -1 && RPS.Heading() != -2 && (TimeNow() - startTime) < SECONDS_TIMEOUT)
+    {
+        // Skids are pointing up
+        if (RPS.Heading() > 0 && RPS.Heading() < 180) {
+            if(RPS.Y() > y_coordinate)
+            {
+                //pulse the motors for one tick in the correct direction
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
+            }
+            else if(RPS.Y() < y_coordinate)
+            {
+                //pulse the motors for a short duration in the correct direction
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
+            }
+        }
+        // else the skids are pointing down
+        else {
+            if(RPS.Y() > y_coordinate)
+            {
+                //pulse the motors for one tick in the correct direction
+                driveForInches(SKID_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
+            }
+            else if(RPS.Y() < y_coordinate)
+            {
+                //pulse the motors for a short duration in the correct direction
+                driveForInches(WHEELS_FIRST, INCHES_PER_TICK, RPS_POWER, LEFT_MOTOR_OFFSET);
+            }
+        }
+    }
+}
+
 // Helper function that determines whether the robot is in the dead zone or otherwise non-functioning
 bool RPSIsWorking () {
 
