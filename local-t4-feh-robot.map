@@ -158,7 +158,7 @@ Discarded input sections
                 0x00000000       0x20 ..\exploration-one.o
  .debug_line    0x00000000      0x293 ..\exploration-one.o
  .debug_macinfo
-                0x00000000    0x64a53 ..\exploration-one.o
+                0x00000000    0x64a51 ..\exploration-one.o
  .debug_str     0x00000000      0x16e ..\exploration-one.o
  .comment       0x00000000       0x7a ..\exploration-one.o
  .ARM.attributes
@@ -177,7 +177,7 @@ Discarded input sections
                 0x00000000       0x20 ..\exploration-two.o
  .debug_line    0x00000000      0x2b6 ..\exploration-two.o
  .debug_macinfo
-                0x00000000    0x64a5b ..\exploration-two.o
+                0x00000000    0x64a59 ..\exploration-two.o
  .debug_str     0x00000000      0xb53 ..\exploration-two.o
  .comment       0x00000000       0x7a ..\exploration-two.o
  .ARM.attributes
@@ -203,7 +203,7 @@ Discarded input sections
                 0x00000000       0x30 ..\line-following-functions.o
  .debug_line    0x00000000      0x394 ..\line-following-functions.o
  .debug_macinfo
-                0x00000000    0x64a36 ..\line-following-functions.o
+                0x00000000    0x64a34 ..\line-following-functions.o
  .debug_str     0x00000000      0xea6 ..\line-following-functions.o
  .comment       0x00000000       0x7a ..\line-following-functions.o
  .ARM.attributes
@@ -227,7 +227,7 @@ Discarded input sections
                 0x00000000       0x20 ..\performance-test-four.o
  .debug_line    0x00000000      0x3ae ..\performance-test-four.o
  .debug_macinfo
-                0x00000000    0x64ac4 ..\performance-test-four.o
+                0x00000000    0x64ac2 ..\performance-test-four.o
  .debug_str     0x00000000     0x136c ..\performance-test-four.o
  .comment       0x00000000       0x7a ..\performance-test-four.o
  .ARM.attributes
@@ -246,7 +246,7 @@ Discarded input sections
                 0x00000000       0x20 ..\performance-test-one.o
  .debug_line    0x00000000      0x2cc ..\performance-test-one.o
  .debug_macinfo
-                0x00000000    0x64a6c ..\performance-test-one.o
+                0x00000000    0x64a6a ..\performance-test-one.o
  .debug_str     0x00000000      0xe0b ..\performance-test-one.o
  .comment       0x00000000       0x7a ..\performance-test-one.o
  .ARM.attributes
@@ -265,7 +265,7 @@ Discarded input sections
                 0x00000000       0x20 ..\performance-test-three.o
  .debug_line    0x00000000      0x313 ..\performance-test-three.o
  .debug_macinfo
-                0x00000000    0x64aa3 ..\performance-test-three.o
+                0x00000000    0x64aa1 ..\performance-test-three.o
  .debug_str     0x00000000     0x105c ..\performance-test-three.o
  .comment       0x00000000       0x7a ..\performance-test-three.o
  .ARM.attributes
@@ -286,7 +286,7 @@ Discarded input sections
                 0x00000000       0x28 ..\performance-test-two.o
  .debug_line    0x00000000      0x31e ..\performance-test-two.o
  .debug_macinfo
-                0x00000000    0x64a91 ..\performance-test-two.o
+                0x00000000    0x64a8f ..\performance-test-two.o
  .debug_str     0x00000000      0xda0 ..\performance-test-two.o
  .comment       0x00000000       0x7a ..\performance-test-two.o
  .ARM.attributes
@@ -331,7 +331,7 @@ Discarded input sections
                 0x00000000       0x38 ..\pid-drive-functions.o
  .debug_line    0x00000000      0x397 ..\pid-drive-functions.o
  .debug_macinfo
-                0x00000000    0x66705 ..\pid-drive-functions.o
+                0x00000000    0x66703 ..\pid-drive-functions.o
  .debug_str     0x00000000     0x10b0 ..\pid-drive-functions.o
  .comment       0x00000000       0x7a ..\pid-drive-functions.o
  .ARM.attributes
@@ -3750,69 +3750,69 @@ OUTPUT(../local-t4-feh-robot.elf elf32-littlearm)
  .debug_line    0x000092b4       0xc0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
  .debug_line    0x00009374      0x119 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_macinfo  0x00000000   0xb5c4b4
+.debug_macinfo  0x00000000   0xb5c4a4
  .debug_macinfo
-                0x00000000    0x64a36 ..\bump-switch-functions.o
+                0x00000000    0x64a34 ..\bump-switch-functions.o
  .debug_macinfo
-                0x00064a36    0x64a36 ..\cds-cell-functions.o
+                0x00064a34    0x64a34 ..\cds-cell-functions.o
  .debug_macinfo
-                0x000c946c    0x64afa ..\full-course.o
+                0x000c9468    0x64af8 ..\full-course.o
  .debug_macinfo
-                0x0012df66    0x64a50 ..\other-functions.o
+                0x0012df60    0x64a4e ..\other-functions.o
  .debug_macinfo
-                0x001929b6    0x64a5b ..\rps-functions.o
+                0x001929ae    0x64a59 ..\rps-functions.o
  .debug_macinfo
-                0x001f7411    0x64a36 ..\shaft-encoders-drive-functions.o
+                0x001f7407    0x64a34 ..\shaft-encoders-drive-functions.o
  .debug_macinfo
-                0x0025be47    0x64a36 ..\time-drive-functions.o
+                0x0025be3b    0x64a34 ..\time-drive-functions.o
  .debug_macinfo
-                0x002c087d    0x64bcd ..\main.o
+                0x002c086f    0x64bcb ..\main.o
  .debug_macinfo
-                0x0032544a    0x647fb Startup\__arm_start.o
+                0x0032543a    0x647fb Startup\__arm_start.o
  .debug_macinfo
-                0x00389c45     0x3464 Startup\__arm_end.o
+                0x00389c35     0x3464 Startup\__arm_end.o
  .debug_macinfo
-                0x0038d0a9    0x64cce Startup\kinetis_sysinit.o
+                0x0038d099    0x64cce Startup\kinetis_sysinit.o
  .debug_macinfo
-                0x003f1d77    0x6305c Libraries\FEHMotor.o
+                0x003f1d67    0x6305c Libraries\FEHMotor.o
  .debug_macinfo
-                0x00454dd3    0x6318f Drivers\i2c.o
+                0x00454dc3    0x6318f Drivers\i2c.o
  .debug_macinfo
-                0x004b7f62    0x62fd6 Drivers\spi.o
+                0x004b7f52    0x62fd6 Drivers\spi.o
  .debug_macinfo
-                0x0051af38    0x62fc7 Drivers\uart.o
+                0x0051af28    0x62fc7 Drivers\uart.o
  .debug_macinfo
-                0x0057deff     0x4396 Drivers\ff.o
+                0x0057deef     0x4396 Drivers\ff.o
  .debug_macinfo
-                0x00582295    0x6452b Drivers\SDHC.o
+                0x00582285    0x6452b Drivers\SDHC.o
  .debug_macinfo
-                0x005e67c0    0x63036 Drivers\lptmr.o
+                0x005e67b0    0x63036 Drivers\lptmr.o
  .debug_macinfo
-                0x006497f6    0x62fdc FEHProteus.o
+                0x006497e6    0x62fdc FEHProteus.o
  .debug_macinfo
-                0x006ac7d2    0x63085 Drivers\FEHPropeller.o
+                0x006ac7c2    0x63085 Drivers\FEHPropeller.o
  .debug_macinfo
-                0x0070f857    0x62ff1 Libraries\FEHUtility.o
+                0x0070f847    0x62ff1 Libraries\FEHUtility.o
  .debug_macinfo
-                0x00772848    0x64348 Libraries\FEHIO.o
+                0x00772838    0x64348 Libraries\FEHIO.o
  .debug_macinfo
-                0x007d6b90    0x63678 Drivers\adc16.o
+                0x007d6b80    0x63678 Drivers\adc16.o
  .debug_macinfo
-                0x0083a208    0x6301e Libraries\FEHBuzzer.o
+                0x0083a1f8    0x6301e Libraries\FEHBuzzer.o
  .debug_macinfo
-                0x0089d226    0x64476 Libraries\FEHServo.o
+                0x0089d216    0x64476 Libraries\FEHServo.o
  .debug_macinfo
-                0x0090169c    0x649ab Libraries\FEHLCD.o
+                0x0090168c    0x649ab Libraries\FEHLCD.o
  .debug_macinfo
-                0x00966047    0x631be Libraries\FEHAccel.o
+                0x00966037    0x631be Libraries\FEHAccel.o
  .debug_macinfo
-                0x009c9205    0x636a3 Libraries\FEHBattery.o
+                0x009c91f5    0x636a3 Libraries\FEHBattery.o
  .debug_macinfo
-                0x00a2c8a8    0x63d5d Drivers\FEHXBee.o
+                0x00a2c898    0x63d5d Drivers\FEHXBee.o
  .debug_macinfo
-                0x00a90605    0x66196 Libraries\FEHRPS.o
+                0x00a905f5    0x66196 Libraries\FEHRPS.o
  .debug_macinfo
-                0x00af679b    0x65d19 Libraries\FEHSD.o
+                0x00af678b    0x65d19 Libraries\FEHSD.o
 
 .debug_str      0x00000000     0x5589
  .debug_str     0x00000000      0xdad ..\bump-switch-functions.o

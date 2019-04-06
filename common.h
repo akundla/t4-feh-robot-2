@@ -90,8 +90,8 @@
 
 // CDS Cell average Voltage with red filters
 #define BLANK_STARTER_RED_F_V_AVG 1.745
-#define RED_LIGHT_RED_F_V_AVG 0.313
-#define BLUE_LIGHT_RED_F_V_AVG 0.895
+#define RED_LIGHT_RED_F_V_AVG 0.34
+#define BLUE_LIGHT_RED_F_V_AVG 1.42
 
 // Constants from exploration 1
 // Left optosensor
