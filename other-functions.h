@@ -27,4 +27,7 @@ void dropCoin();
 // Moves the arm back and forth to ensure it functions correctly
 void testArm();
 
+// For le judges
+void showOffArm();
+
 #endif // OTHERFUNCTIONS_H

@@ -131,3 +131,28 @@ void testArm() {
 
     lower_servo.SetDegree(0);
 }
+
+// For the judges
+void showOffArm() {
+    calibrateServos();
+
+    setupServos();
+
+    while (true) {
+        lower_servo.SetDegree(LOWER_DEGREE_STRAIGHT_OUT);
+
+        Sleep(2.0);
+
+        upper_servo.SetDegree(UPPER_DEGREE_VERTICAL_DOWN);
+
+        Sleep(2.0);
+
+        upper_servo.SetDegree(140);
+
+        Sleep(2.0);
+
+        lower_servo.SetDegree(15);
+
+        waitForTouch();
+    }
+}

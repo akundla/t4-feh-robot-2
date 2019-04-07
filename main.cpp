@@ -61,5 +61,5 @@ float yDDRLights = 0.0;
  */
 int main(void) {
 
-    navigateFullCourse();
+    showOffArm();
 }
