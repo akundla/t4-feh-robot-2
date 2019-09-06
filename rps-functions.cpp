@@ -159,24 +159,24 @@ bool RPSIsWorking () {
 }
 
 // Moves the robot into a specific heading.
-void check_heading(float heading) //using RPS
+void check_heading(float desiredHeading) //using RPS
 {
     // While the robot is reading a heading on the course and that heading is not the correct heading
     float startTime = TimeNow();
-    while (RPS.Heading() > (heading + DEGREE_TOLERANCE) || RPS.Heading() < (heading - DEGREE_TOLERANCE) && RPSIsWorking() && (TimeNow() - startTime) < SECONDS_TIMEOUT)
+    while (RPS.Heading() > (desiredHeading + DEGREE_TOLERANCE) || RPS.Heading() < (desiredHeading - DEGREE_TOLERANCE) && RPSIsWorking() && (TimeNow() - startTime) < SECONDS_TIMEOUT)
     {
-        if(RPS.Heading() > heading) {
+        if(RPS.Heading() > desiredHeading) {
             // If we should turn clockwise, do that
-           if ((RPS.Heading() - heading) <= 180) {
+           if ((RPS.Heading() - desiredHeading) <= 180) {
                turnCountsInPlace(CLOCKWISE, 1, RPS_POWER);
            }
            // Else we should go counterclockwise
            else {
                turnCountsInPlace(COUNTER_CLOCKWISE, 1, RPS_POWER);
            }
-        } else if(RPS.Heading() < heading) {
+        } else if(RPS.Heading() < desiredHeading) {
             // If we should turn counterclockwise, do that
-           if ((heading - RPS.Heading()) <= 180) {
+           if ((desiredHeading - RPS.Heading()) <= 180) {
                turnCountsInPlace(COUNTER_CLOCKWISE, 1, RPS_POWER);
            }
            // Else we should go counterclockwise
